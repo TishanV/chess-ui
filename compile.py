@@ -1,8 +1,8 @@
 import os
 import shutil
 
-SRC_DIR = 'static'
-OUT_DIR = 'dist/static'
+SRC_DIR = 'assets'
+OUT_DIR = 'dist/assets'
 
 
 def copyFile(base, filename):
@@ -13,4 +13,4 @@ def copyFile(base, filename):
 
 
 for r, d, f in os.walk(SRC_DIR):
-    [copyFile(r, file) for file in f if file.endswith('.css')]
+    [copyFile(r, file) for file in f]
