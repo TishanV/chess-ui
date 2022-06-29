@@ -7,7 +7,8 @@ const defaultUIProps: UIProps = {
 };
 
 // DYNAMIC PROPS (NEED TO BE IN ATOMS STORE FOR RECOIL]
-const BoardColor = ["#D7C7FF", "#6D31FF"];
+const BoardColor = ["#D7C7FF", "#6D31FF"]; // White, Black
+const scoreColor = ["#62626D", "#7976FF"]; // Unselected, Selected
 
 export type { UIProps };
-export { defaultUIProps, BoardColor };
+export { defaultUIProps, BoardColor, scoreColor };
