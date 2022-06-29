@@ -1,0 +1,21 @@
+.chess-board{
+    display: grid;
+    /* grid-template-columns: repeat(8, 62.5px);
+    grid-template-rows: repeat(8, 62.5px); */
+    position: relative;
+}
+
+.square{
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: antiquewhite;
+}
+
+.piece{
+    position: absolute;
+    /* top: 0px; */
+    /* left: 0px; */
+    
+}
