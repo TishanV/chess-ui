@@ -1,0 +1,24 @@
+.navigator{
+    display: flex;
+    align-items: center;
+    background-color: #38383b;
+    height: 40px;
+}
+
+.navigator .controls{
+    margin: 0 10px;
+    height: 35px;
+    filter: invert(100%);
+    cursor: pointer;
+    /* background-color: firebrick; */
+}
+
+.navigator .controls.other{
+    /* background-color: firebrick; */
+    /* float: right; */
+    height: 30px;
+}
+.navigator .controls:hover{
+    background-color: rgb(189, 187, 112);
+    border-radius: 17px;
+}

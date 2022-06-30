@@ -1,0 +1,9 @@
+.board-manager{
+    background-color: #38383b;
+    height: 50px;
+    padding: 10px;
+}
+
+.board-manager .boards{
+    display: inline;
+}
