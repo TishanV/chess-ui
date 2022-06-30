@@ -12,3 +12,6 @@ code {
     monospace;
 }
 
+.chess-ui{
+  position: relative;
+}
