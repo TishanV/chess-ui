@@ -1,23 +1,29 @@
 import React from "react"
 import { scoreColor } from "../globals";
-import { MouseEvent } from "react";
+import { useRecoilValue, useSetRecoilState } from "recoil";
+import { score, selectScore } from "../store/scoreboard";
 
 interface ScoreProps {
-  value: string;
-  selected: boolean;
-  onClick: (e: MouseEvent | undefined) => void;
+  id: number;
 }
 
 function Score(props: ScoreProps) {
+  const _score = useRecoilValue(score(props.id));
+  const select = useSetRecoilState(selectScore);
+  console.log(`Score ${props.id} render`);
   return (
     <div
       className="score"
-      style={{ backgroundColor: scoreColor[+props.selected] }}
-      onClick={(e) => props.onClick(e)}
+      style={{ backgroundColor: scoreColor[+_score.isSelected] }}
+      onClick={(_) => select(props.id)}
     >
-      {props.value}
+      {numerizeScore(_score.value, props.id - 1)}
     </div>
   );
 }
+
+// HELPER Function
+const numerizeScore = (score: string, i: number) =>
+  i % 2 ? score : `${1 + Math.floor(i / 2)}. ${score}`;
 
 export { Score };

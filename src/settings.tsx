@@ -7,9 +7,12 @@ import Button from "react-bootstrap/Button";
 import Check from "react-bootstrap/FormCheck";
 import Select from "react-bootstrap/FormSelect";
 import "../assets/css/settings.css";
+import { useRecoilState } from "recoil";
+import { popup } from "./store";
 
 function SettingsPage() {
-  return (
+  const [currentPopup, setPopup] = useRecoilState(popup);
+  return currentPopup == "settings" ? (
     <div className="settings-page">
       <Tab.Container id="left-tabs-example" defaultActiveKey="first">
         <Row>
@@ -74,9 +77,13 @@ function SettingsPage() {
       <div style={{ flex: 1 }}></div>
       <footer>
         <Button variant="primary">OK</Button>{" "}
-        <Button variant="outline-secondary">Cancel</Button>
+        <Button variant="outline-secondary" onClick={(_) => setPopup("")}>
+          Cancel
+        </Button>
       </footer>
     </div>
+  ) : (
+    <></>
   );
 }
 

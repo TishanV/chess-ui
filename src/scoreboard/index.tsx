@@ -1,43 +1,22 @@
 import React from "react"
 import { Score } from "./score";
 import "../../assets/css/scoreboard.css";
-import { useState } from "react";
-
-// HELPER Function
-const numerizeScore = (scoreList: string[]) =>
-  scoreList.map((score, i) =>
-    i % 2 ? score : `${1 + Math.floor(i / 2)}. ${score}`
-  );
-
-const testScores = numerizeScore([
-  "e4",
-  "e5",
-  "e6",
-  "Nf5",
-  "e7",
-  "e4",
-  "e5",
-  "e6",
-  "Nf5",
-  "e7",
-  "e4",
-  "e5",
-  "e6",
-  "Nf5",
-  "e7",
-]);
+import { useRecoilValue, useSetRecoilState } from "recoil";
+import { pushScore, scoreIDs } from "../store/scoreboard";
+import { useEffect } from "react";
 
 function ScoreBoard() {
-  const [selectedIndex, setIndex] = useState(testScores.length - 1);
+  const scoreIds = useRecoilValue(scoreIDs);
+  console.log("Scoreboard render");
+  const setter = useSetRecoilState(pushScore);
+  useEffect(() => {
+    ["e2", "e5", "Nf5", "Nc7", "g3"].map((s) => setter(s));
+    console.log("Effect: Scoreboard");
+  }, []);
   return (
     <div className="score-board">
-      {testScores.map((v, i) => (
-        <Score
-          key={i}
-          value={v}
-          selected={i == selectedIndex}
-          onClick={() => setIndex(i)}
-        />
+      {scoreIds.map((v) => (
+        <Score id={v} key={v} />
       ))}
     </div>
   );
