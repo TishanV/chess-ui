@@ -1,12 +1,20 @@
 import React from "react"
-import { useSetRecoilState } from "recoil";
+import { useRecoilValue, useSetRecoilState } from "recoil";
 import "../../assets/css/navigator.css";
-import { boardOrientation, boardState, popup } from "../store";
+import { boardOrientation, popup } from "../store";
+import {
+  selectedGameIDAtom,
+  selectedStateIDAtom,
+  stateIDAtom,
+} from "../store/game.atoms";
 
 function Navigator() {
   const flip = useSetRecoilState(boardOrientation);
-  const setMove = useSetRecoilState(boardState);
+  const selGameID = useRecoilValue(selectedGameIDAtom);
+  const NStates = useRecoilValue(stateIDAtom(selGameID)).at(-1) || 0;
+  const setMove = useSetRecoilState(selectedStateIDAtom(selGameID));
   const popupSetter = useSetRecoilState(popup);
+
   return (
     <div className="navigator">
       <img
@@ -21,7 +29,7 @@ function Navigator() {
         src="../../assets/navigations/fastr.svg"
         alt="previous"
         title="Previous move"
-        onClick={(_) => setMove((n) => n - 1)}
+        onClick={(_) => setMove((n) => wrapSum(n, -1, NStates))}
       />
       <img
         className="controls"
@@ -34,7 +42,7 @@ function Navigator() {
         src="../../assets/navigations/fastf.svg"
         alt="next"
         title="Next move"
-        onClick={(_) => setMove((n) => n + 1)}
+        onClick={(_) => setMove((n) => wrapSum(n, 1, NStates))}
       />
       <img
         className="controls"
@@ -67,5 +75,13 @@ function Navigator() {
     </div>
   );
 }
+
+// HELPER FUNCTIONS
+const wrapSum = (a: number, b: number, max: number) => {
+  const sum = a + b;
+  if (sum > max) return max;
+  if (sum < 0) return 0;
+  return sum;
+};
 
 export { Navigator };

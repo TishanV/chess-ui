@@ -1,22 +1,17 @@
 import React from "react"
 import { Score } from "./score";
 import "../../assets/css/scoreboard.css";
-import { useRecoilValue, useSetRecoilState } from "recoil";
-import { pushScore, scoreIDs } from "../store/scoreboard";
-import { useEffect } from "react";
+import { useRecoilValue } from "recoil";
+import { selectedGameIDAtom, stateIDAtom } from "../store/game.atoms";
 
 function ScoreBoard() {
-  const scoreIds = useRecoilValue(scoreIDs);
+  const selectedGameId = useRecoilValue(selectedGameIDAtom);
+  const stateIds = useRecoilValue(stateIDAtom(selectedGameId));
   console.log("Scoreboard render");
-  const setter = useSetRecoilState(pushScore);
-  useEffect(() => {
-    ["e2", "e5", "Nf5", "Nc7", "g3"].map((s) => setter(s));
-    console.log("Effect: Scoreboard");
-  }, []);
   return (
     <div className="score-board">
-      {scoreIds.map((v) => (
-        <Score id={v} key={v} />
+      {stateIds.slice(1).map((id) => (
+        <Score id={[selectedGameId, id]} key={id} />
       ))}
     </div>
   );

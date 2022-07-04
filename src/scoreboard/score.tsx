@@ -1,23 +1,29 @@
 import React from "react"
 import { scoreColor } from "../globals";
-import { useRecoilValue, useSetRecoilState } from "recoil";
-import { score, selectScore } from "../store/scoreboard";
+import { useRecoilValue, useRecoilState } from "recoil";
+import {
+  gameStateAtom,
+  GameStateID,
+  selectedStateIDAtom,
+} from "../store/game.atoms";
 
 interface ScoreProps {
-  id: number;
+  id: GameStateID;
 }
 
 function Score(props: ScoreProps) {
-  const _score = useRecoilValue(score(props.id));
-  const select = useSetRecoilState(selectScore);
+  const score = useRecoilValue(gameStateAtom(props.id)).sanMove;
+  const [selectedID, selectID] = useRecoilState(
+    selectedStateIDAtom(props.id[0])
+  );
   console.log(`Score ${props.id} render`);
   return (
     <div
       className="score"
-      style={{ backgroundColor: scoreColor[+_score.isSelected] }}
-      onClick={(_) => select(props.id)}
+      style={{ backgroundColor: scoreColor[+(selectedID === props.id[1])] }}
+      onClick={(_) => selectID(props.id[1])}
     >
-      {numerizeScore(_score.value, props.id - 1)}
+      {numerizeScore(score, props.id[1] - 1)}
     </div>
   );
 }

@@ -1,18 +1,29 @@
 import React from "react"
+import { useRef } from "react";
+import { useRecoilValue, useSetRecoilState } from "recoil";
 import { BoardColor } from "../globals";
 import { appSize } from "../store";
-import { useRecoilValue, useSetRecoilState } from "recoil";
-import { square, placePieces } from "../store/chessboard";
 import { Draggable } from "../components/draggable";
-import { useRef } from "react";
+import {
+  gameStateAtom,
+  selectedGameIDAtom,
+  selectedStateIDAtom,
+} from "../store/game.atoms";
+import { movePieceSelector } from "../store/game.events";
 
 interface SquareProps {
   id: number;
 }
 
 function Square(props: SquareProps) {
-  const piece = useRecoilValue(square(props.id));
-  const movePiece = useSetRecoilState(placePieces);
+  const selGameID = useRecoilValue(selectedGameIDAtom);
+  const selStateID = useRecoilValue(selectedStateIDAtom(selGameID));
+  const boardState = useRecoilValue(
+    gameStateAtom([selGameID, selStateID])
+  ).boardState;
+  const piece = boardState.board[toCorePos(props.id)];
+  const movePiece = useSetRecoilState(movePieceSelector);
+
   const size = useRecoilValue(appSize) / 8;
   const squareRef = useRef<HTMLDivElement>(null);
   const boardRect = squareRef.current?.parentElement?.getBoundingClientRect();
@@ -24,14 +35,14 @@ function Square(props: SquareProps) {
       className="square"
       style={{ backgroundColor: BoardColor[paritySq(props.id)] }}
     >
-      {piece != " " ? (
+      {piece != "-" ? (
         <Draggable
           boundTop={boardRect?.top}
           boundBottom={boardRect?.bottom}
           boundLeft={boardRect?.left}
           boundRight={boardRect?.right}
           onDragEnd={(e) =>
-            movePiece(moveAction(piece, props.id, e.clientX, e.clientY))
+            movePiece(moveAction(props.id, e.clientX, e.clientY))
           }
         >
           <img src={piecePath(piece)} alt="piece" width={size * 0.95} />
@@ -50,6 +61,10 @@ function piecePath(piece: string) {
   return "../../assets/pieces/" + piece + ".svg";
 }
 
+function toCorePos(UIPos: number) {
+  return 10 * (1 + Math.floor(UIPos / 8)) + (UIPos % 8) + 1;
+}
+
 function squareIDFromCords(x: number, y: number) {
   const divId = document
     .elementsFromPoint(x, y)
@@ -58,11 +73,11 @@ function squareIDFromCords(x: number, y: number) {
 }
 
 // AVOID DIRECT MANIPULATION
-function moveAction(piece: string, fromID: number, x: number, y: number) {
+function moveAction(fromID: number, x: number, y: number): [number, number] {
   const toID = squareIDFromCords(x, y);
-  if (toID === fromID) return [];
-  if (toID !== undefined) return [`${fromID} `, `${toID}${piece}`];
-  return [];
+  const from = toCorePos(fromID);
+  if (toID !== undefined) return [from, toCorePos(toID)];
+  return [from, from];
 }
 
 export { Square };

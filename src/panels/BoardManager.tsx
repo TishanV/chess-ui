@@ -4,41 +4,37 @@ import Dropdown from "react-bootstrap/Dropdown";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import "../../assets/css/board-manager.css";
 import {
-  addBoard,
-  boardNames,
-  removeBoard,
-  selectedBoardID,
-} from "../store/bordmanager";
+  gameIDAtom,
+  gameNameAtom,
+  selectedGameIDAtom,
+} from "../store/game.atoms";
 
 function BoardManager() {
-  const boards = useRecoilValue(boardNames);
-  const [currentBoardID, setBoard] = useRecoilState(selectedBoardID);
-  const add = useSetRecoilState(addBoard);
-  const remove = useSetRecoilState(removeBoard);
+  const boardIDs = useRecoilValue(gameIDAtom);
+  const [currentBoardID, setBoard] = useRecoilState(selectedGameIDAtom);
+  // const add = useSetRecoilState(addBoard);
+  // const remove = useSetRecoilState(removeBoard);
   console.log("BoardManager rendered");
   return (
     <div className="board-manager">
-      <Button variant="danger" onClick={(_) => remove(currentBoardID)}>
+      <Button variant="danger" onClick={(_) => currentBoardID}>
         Delete
       </Button>{" "}
-      <Button
-        variant="primary"
-        onClick={(_) => add(`Board ${boards.length + 1}`)}
-      >
+      <Button variant="primary" onClick={(_) => `Board ${boardIDs.length + 1}`}>
         Add
       </Button>{" "}
       <Dropdown className="boards">
         <Dropdown.Toggle variant="secondary">
-          {boards[currentBoardID]}
+          {useRecoilValue(gameNameAtom(currentBoardID))}
         </Dropdown.Toggle>
         <Dropdown.Menu variant="dark">
-          {boards.map((name, i) => (
+          {boardIDs.map((i) => (
             <Dropdown.Item
               key={i}
               active={i == currentBoardID}
               onClick={(_) => setBoard(i)}
             >
-              {name}
+              {useRecoilValue(gameNameAtom(i))}
             </Dropdown.Item>
           ))}
         </Dropdown.Menu>

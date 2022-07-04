@@ -1,6 +1,4 @@
-import { atom, selector } from "recoil";
-import { placePieces } from "./chessboard";
-import { scoreIDs, selectScore } from "./scoreboard";
+import { atom } from "recoil";
 
 const appSize = atom({
   key: "app-size",
@@ -17,17 +15,4 @@ const boardOrientation = atom({
   default: false,
 });
 
-const boardState = selector({
-  key: "board-state",
-  get: ({ get }) => get(selectScore),
-  set: ({ set, get }, i) => {
-    const n = get(scoreIDs).length;
-    if (i > n) i = get(selectScore);
-    else if (i == -1) i = n;
-    else if (i < 0) i = 0;
-    set(selectScore, i);
-    set(placePieces, ["32R", "63k", "2Q"]);
-  },
-});
-
-export { boardOrientation, appSize, boardState, popup };
+export { boardOrientation, appSize, popup };
