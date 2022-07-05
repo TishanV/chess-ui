@@ -1,29 +1,26 @@
-import React from "react"
+import React from "react";
 import { scoreColor } from "../globals";
-import { useRecoilValue, useRecoilState } from "recoil";
-import {
-  gameStateAtom,
-  GameStateID,
-  selectedStateIDAtom,
-} from "../store/game.atoms";
+import { useRecoilValue, useSetRecoilState } from "recoil";
+import { StateID } from "../store/game.atoms";
+import { scoreSelector, stateSelector } from "../store/game.selector";
 
 interface ScoreProps {
-  id: GameStateID;
+  id: StateID;
 }
 
 function Score(props: ScoreProps) {
-  const score = useRecoilValue(gameStateAtom(props.id)).sanMove;
-  const [selectedID, selectID] = useRecoilState(
-    selectedStateIDAtom(props.id[0])
+  const { score, isSelected } = JSON.parse(
+    useRecoilValue(scoreSelector(props.id))
   );
+  const selectID = useSetRecoilState(stateSelector);
   console.log(`Score ${props.id} render`);
   return (
     <div
       className="score"
-      style={{ backgroundColor: scoreColor[+(selectedID === props.id[1])] }}
-      onClick={(_) => selectID(props.id[1])}
+      style={{ backgroundColor: scoreColor[+isSelected] }}
+      onClick={(_) => selectID(props.id)}
     >
-      {numerizeScore(score, props.id[1] - 1)}
+      {numerizeScore(score, props.id - 1)}
     </div>
   );
 }

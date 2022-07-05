@@ -11,7 +11,7 @@ function ScoreBoard() {
   return (
     <div className="score-board">
       {stateIds.slice(1).map((id) => (
-        <Score id={[selectedGameId, id]} key={id} />
+        <Score id={id} key={id} />
       ))}
     </div>
   );

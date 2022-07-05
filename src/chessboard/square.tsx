@@ -4,24 +4,16 @@ import { useRecoilValue, useSetRecoilState } from "recoil";
 import { BoardColor } from "../globals";
 import { appSize } from "../store";
 import { Draggable } from "../components/draggable";
-import {
-  gameStateAtom,
-  selectedGameIDAtom,
-  selectedStateIDAtom,
-} from "../store/game.atoms";
 import { movePieceSelector } from "../store/game.events";
+import { pieceSelector } from "../store/game.selector";
+import { toCorePos } from "../utils";
 
 interface SquareProps {
   id: number;
 }
 
 function Square(props: SquareProps) {
-  const selGameID = useRecoilValue(selectedGameIDAtom);
-  const selStateID = useRecoilValue(selectedStateIDAtom(selGameID));
-  const boardState = useRecoilValue(
-    gameStateAtom([selGameID, selStateID])
-  ).boardState;
-  const piece = boardState.board[toCorePos(props.id)];
+  const piece = useRecoilValue(pieceSelector(props.id));
   const movePiece = useSetRecoilState(movePieceSelector);
 
   const size = useRecoilValue(appSize) / 8;
@@ -59,10 +51,6 @@ function paritySq(id: number) {
 
 function piecePath(piece: string) {
   return "../../assets/pieces/" + piece + ".svg";
-}
-
-function toCorePos(UIPos: number) {
-  return 10 * (1 + Math.floor(UIPos / 8)) + (UIPos % 8) + 1;
 }
 
 function squareIDFromCords(x: number, y: number) {
