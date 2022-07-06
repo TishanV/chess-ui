@@ -51,6 +51,7 @@ function Navigator() {
         src="../../assets/navigations/page.svg"
         alt="pgn/fen"
         title="PGN-FEN"
+        onClick={(_) => popupSetter("pgn")}
       />
       <img
         className="controls other"

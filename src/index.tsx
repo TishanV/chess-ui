@@ -8,6 +8,7 @@ import { SettingsPage } from "./settings";
 import { UIProps } from "./globals";
 import { RecoilRoot } from "recoil";
 import { appSize } from "./store";
+import { PGNPage } from "./pgn";
 
 function ChessUI(props: UIProps) {
   console.log("Chess UI render");
@@ -19,6 +20,7 @@ function ChessUI(props: UIProps) {
         <Navigator />
         <ScoreBoard />
         <SettingsPage />
+        <PGNPage />
       </div>
     </RecoilRoot>
   );

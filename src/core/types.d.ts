@@ -18,7 +18,7 @@ export type PGNObject = {
   White?: string;
   Black?: string;
   Date?: string;
-  score: [];
+  score: string[];
 };
 
 export interface FENState {
