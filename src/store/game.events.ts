@@ -17,15 +17,19 @@ export const movePieceSelector = selector<[number, number]>({
     const selGID = get(selectedGameIDAtom);
     const selSID = get(selectedStateIDAtom(selGID));
     const selState = get(gameStateAtom([selGID, selSID])).boardState;
+    if (!selState.moves[cords[0]]) return;
     const newState = doMove(selState, cords);
-    const newStateID = selSID + 1;
     if (newState) {
+      const newStateID = selSID + 1;
       const san = toSANMove(cords, selState, newState);
       set(gameStateAtom([selGID, newStateID]), {
         boardState: newState,
         sanMove: san,
       });
-      set(stateIDAtom(selGID), (stateIDs) => [...stateIDs, newStateID]);
+      set(stateIDAtom(selGID), (stateIDs) => {
+        const newStateIDs = [...stateIDs, newStateID];
+        return newStateIDs.slice(0, newStateIDs.indexOf(newStateID) + 1);
+      });
       set(selectedStateIDAtom(selGID), newStateID);
       console.log("moved", san, newStateID);
     }
