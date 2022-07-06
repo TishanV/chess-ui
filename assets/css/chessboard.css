@@ -1,7 +1,5 @@
 .chess-board{
     display: grid;
-    /* grid-template-columns: repeat(8, 62.5px);
-    grid-template-rows: repeat(8, 62.5px); */
     position: relative;
 }
 
@@ -10,5 +8,38 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: antiquewhite;
+}
+
+.square .highlight{
+    position: absolute;
+}
+
+.square .highlight.movable{
+    border-radius: 50%;
+    background-color: black;
+    opacity: 0.4;
+    
+}
+
+.square .highlight.check{
+    border-radius: 50%;
+    background-color: red;
+    box-shadow: 0px 0px 25px 20px red;
+}
+
+.square .highlight.vulnerable{
+    border-radius: 20%;
+    background-color: red;
+    opacity: 0.7;
+}
+
+.square .highlight.capture{
+    border-radius: 20%;
+    background-color: greenyellow;
+    opacity: 0.7;
+}
+
+.square .highlight.select{
+    background-color: rgb(59, 192, 170);
+    opacity: 0.9;
 }

@@ -1,12 +1,19 @@
 import React from "react"
 import { useRef } from "react";
-import { useRecoilValue, useSetRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { BoardColor } from "../globals";
 import { appSize } from "../store";
 import { Draggable } from "../components/draggable";
 import { movePieceSelector } from "../store/game.events";
 import { pieceSelector } from "../store/game.selector";
 import { toCorePos } from "../utils";
+import {
+  captureSquares,
+  checkSquare,
+  movableSquares,
+  selectedPiece,
+  vulnerableSquares,
+} from "../store/highlights.selectors";
 
 interface SquareProps {
   id: number;
@@ -15,6 +22,12 @@ interface SquareProps {
 function Square(props: SquareProps) {
   const piece = useRecoilValue(pieceSelector(props.id));
   const movePiece = useSetRecoilState(movePieceSelector);
+
+  const [isSelected, selectSquare] = useRecoilState(selectedPiece(props.id));
+  const isMovable = useRecoilValue(movableSquares(props.id));
+  const isCheck = useRecoilValue(checkSquare(props.id));
+  const isVulnerable = useRecoilValue(vulnerableSquares(props.id));
+  const isCaptured = useRecoilValue(captureSquares(props.id));
 
   const size = useRecoilValue(appSize) / 8;
   const squareRef = useRef<HTMLDivElement>(null);
@@ -27,15 +40,47 @@ function Square(props: SquareProps) {
       className="square"
       style={{ backgroundColor: BoardColor[paritySq(props.id)] }}
     >
+      {isSelected ? (
+        <div
+          style={{ width: size, height: size }}
+          className="highlight select"
+        ></div>
+      ) : null}
+      {isMovable ? (
+        <div
+          style={{ width: size / 4, height: size / 4 }}
+          className="highlight movable"
+        ></div>
+      ) : null}
+      {isCheck ? (
+        <div
+          style={{ width: size / 4, height: size / 4 }}
+          className="highlight check"
+        ></div>
+      ) : null}
+      {isVulnerable ? (
+        <div
+          style={{ width: size / 1.2, height: size / 1.2 }}
+          className="highlight vulnerable"
+        ></div>
+      ) : null}
+      {isCaptured ? (
+        <div
+          style={{ width: size / 1.2, height: size / 1.2 }}
+          className="highlight capture"
+        ></div>
+      ) : null}
       {piece != "-" ? (
         <Draggable
           boundTop={boardRect?.top}
           boundBottom={boardRect?.bottom}
           boundLeft={boardRect?.left}
           boundRight={boardRect?.right}
-          onDragEnd={(e) =>
-            movePiece(moveAction(props.id, e.clientX, e.clientY))
-          }
+          onDragStart={(_) => selectSquare(true)}
+          onDragEnd={(e) => {
+            selectSquare(false);
+            movePiece(moveAction(props.id, e.clientX, e.clientY));
+          }}
         >
           <img src={piecePath(piece)} alt="piece" width={size * 0.95} />
         </Draggable>

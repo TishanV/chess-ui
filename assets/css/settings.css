@@ -15,9 +15,6 @@
 .settings-page footer{
     text-align: center;
     margin: 10px;
-    /* display: flex; */
-    /* justify-content: space-around; */
-    /* background-color: aliceblue; */
 }
 
 .settings-page .page{
@@ -25,19 +22,3 @@
     overflow-y: auto;
     height: 340px;
 }
-
-/* .settings-page .nav{
-    margin-left: 10px;
-    border-radius: 5px;
-    width: 30%;
-    background-color: #222222;
-} */
-
-/* .settings-page nav p {
-    padding: 10px;
-    cursor: pointer;
-}
-
-.settings-page nav p.selected{
-    background-color: blue;
-} */
