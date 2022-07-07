@@ -1,8 +1,8 @@
 import { atom, atomFamily } from "recoil";
 import { fenToBoardState } from "../core/boardState";
 import { BoardState } from "../core/types";
+import { defaultFEN } from "../globals";
 
-const defaultFEN = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
 export type GameID = number;
 export type StateID = number;
 export type GameStateID = [GameID, StateID];
