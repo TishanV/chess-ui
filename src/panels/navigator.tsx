@@ -1,6 +1,7 @@
 import React from "react"
 import { useSetRecoilState } from "recoil";
 import "../../assets/css/navigator.css";
+import { NavigationImages } from "../globals";
 import { boardOrientation, popup } from "../store";
 import { removeStateEvent } from "../store/game.events";
 import { stateSelector } from "../store/game.selector";
@@ -15,34 +16,34 @@ function Navigator() {
     <div className="navigator">
       <img
         className="controls"
-        src="../../assets/navigations/previous.svg"
+        src={NavigationImages.StartMove}
         alt="first"
         title="First move"
         onClick={(_) => setMove(1)}
       />
       <img
         className="controls"
-        src="../../assets/navigations/fastr.svg"
+        src={NavigationImages.PreviousMove}
         alt="previous"
         title="Previous move"
         onClick={(_) => setMove((n) => n - 1)}
       />
       <img
         className="controls"
-        src="../../assets/navigations/play_fill.svg"
+        src={NavigationImages.Play}
         alt="play"
         title="Play subsequent moves"
       />
       <img
         className="controls"
-        src="../../assets/navigations/fastf.svg"
+        src={NavigationImages.NextMove}
         alt="next"
         title="Next move"
         onClick={(_) => setMove((n) => n + 1)}
       />
       <img
         className="controls"
-        src="../../assets/navigations/next.svg"
+        src={NavigationImages.LastMove}
         alt="last"
         title="Last Move"
         onClick={(_) => setMove(-1)}
@@ -50,7 +51,7 @@ function Navigator() {
       <img
         className="controls"
         style={{ height: 20 }}
-        src="../../assets/navigations/undo.svg"
+        src={NavigationImages.Undo}
         alt="undo"
         title="Undo Move"
         onClick={(_) => undoMove(undefined)}
@@ -58,21 +59,21 @@ function Navigator() {
       <div style={{ flex: 1 }} />
       <img
         className="controls other"
-        src="../../assets/navigations/page.svg"
+        src={NavigationImages.PGN}
         alt="pgn/fen"
         title="PGN-FEN"
         onClick={(_) => popupSetter("pgn")}
       />
       <img
         className="controls other"
-        src="../../assets/navigations/flip.svg"
+        src={NavigationImages.FlipBoard}
         alt="flip-board"
         title="Flip board"
         onClick={(_) => flip((s) => !s)}
       />
       <img
         className="controls other"
-        src="../../assets/navigations/settings.svg"
+        src={NavigationImages.Settings}
         alt="settings"
         title="Settings"
         onClick={(_) => popupSetter("settings")}

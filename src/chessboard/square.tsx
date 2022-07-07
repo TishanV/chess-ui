@@ -1,4 +1,4 @@
-import React from "react";
+import React from "react"
 import { useRef } from "react";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { appSize } from "../store";
@@ -18,7 +18,7 @@ import {
   enabledFeaturesAtom,
   Features,
 } from "../store/config.atoms";
-import { Theme } from "../globals";
+import { PieceImages, Theme } from "../globals";
 
 interface SquareProps {
   id: number;
@@ -108,7 +108,7 @@ function paritySq(id: number) {
 }
 
 function piecePath(piece: string) {
-  return "../../assets/pieces/" + piece + ".svg";
+  return PieceImages[piece];
 }
 
 function squareIDFromCords(x: number, y: number) {
