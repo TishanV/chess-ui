@@ -2,11 +2,13 @@ import React from "react"
 import { useSetRecoilState } from "recoil";
 import "../../assets/css/navigator.css";
 import { boardOrientation, popup } from "../store";
+import { removeStateEvent } from "../store/game.events";
 import { stateSelector } from "../store/game.selector";
 
 function Navigator() {
   const flip = useSetRecoilState(boardOrientation);
   const setMove = useSetRecoilState(stateSelector);
+  const undoMove = useSetRecoilState(removeStateEvent);
   const popupSetter = useSetRecoilState(popup);
   console.log("Navigator render");
   return (
@@ -44,6 +46,14 @@ function Navigator() {
         alt="last"
         title="Last Move"
         onClick={(_) => setMove(-1)}
+      />
+      <img
+        className="controls"
+        style={{ height: 20 }}
+        src="../../assets/navigations/undo.svg"
+        alt="undo"
+        title="Undo Move"
+        onClick={(_) => undoMove(undefined)}
       />
       <div style={{ flex: 1 }} />
       <img

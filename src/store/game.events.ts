@@ -1,6 +1,8 @@
 import { DefaultValue, selector } from "recoil";
 import { doMove } from "../core/moveable";
 import { toSANMove } from "../core/san";
+import { pieceSound } from "../globals";
+import { enabledFeaturesAtom, Features } from "./config.atoms";
 import {
   gameIDAtom,
   gameStateAtom,
@@ -31,6 +33,7 @@ export const movePieceSelector = selector<[number, number]>({
         return newStateIDs.slice(0, newStateIDs.indexOf(newStateID) + 1);
       });
       set(selectedStateIDAtom(selGID), newStateID);
+      if (get(enabledFeaturesAtom(Features.PIECE_SOUND))) pieceSound.play();
       console.log("moved", san, newStateID);
     }
   },
@@ -56,5 +59,19 @@ export const gameManager = selector<GameBoardAction>({
       set(gameIDAtom, (a) => a.filter((i) => i !== selGID));
       set(selectedGameIDAtom, prevID || 0);
     }
+  },
+});
+
+export const removeStateEvent = selector({
+  key: "remoove-state-event",
+  get: () => undefined,
+  set: ({ set, get }) => {
+    const selGID = get(selectedGameIDAtom);
+    const selSID = get(selectedStateIDAtom(selGID));
+    if (selSID <= 0) return;
+    set(stateIDAtom(selGID), (states) =>
+      states.slice(0, states.indexOf(selSID))
+    );
+    set(selectedStateIDAtom(selGID), (id) => id - 1);
   },
 });
