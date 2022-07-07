@@ -3,6 +3,7 @@ import { scoreColor } from "../globals";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { StateID } from "../store/game.atoms";
 import { scoreSelector, stateSelector } from "../store/game.selector";
+import { enabledFeaturesAtom, Features } from "../store/config.atoms";
 
 interface ScoreProps {
   id: StateID;
@@ -13,6 +14,10 @@ function Score(props: ScoreProps) {
     useRecoilValue(scoreSelector(props.id))
   );
   const selectID = useSetRecoilState(stateSelector);
+  const pieceSymbolEnabled = useRecoilValue(
+    enabledFeaturesAtom(Features.PIECE_SYMBOL)
+  );
+  const numberScore = numerizeScore(score, props.id - 1);
   console.log(`Score ${props.id} render`);
   return (
     <div
@@ -20,7 +25,7 @@ function Score(props: ScoreProps) {
       style={{ backgroundColor: scoreColor[+isSelected] }}
       onClick={(_) => selectID(props.id)}
     >
-      {replacePieceChar(numerizeScore(score, props.id - 1))}
+      {pieceSymbolEnabled ? replacePieceChar(numberScore) : numberScore}
     </div>
   );
 }

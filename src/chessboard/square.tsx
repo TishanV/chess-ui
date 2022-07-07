@@ -1,7 +1,6 @@
-import React from "react"
+import React from "react";
 import { useRef } from "react";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
-import { BoardColor } from "../globals";
 import { appSize } from "../store";
 import { Draggable } from "../components/draggable";
 import { movePieceSelector } from "../store/game.events";
@@ -14,6 +13,12 @@ import {
   selectedPiece,
   vulnerableSquares,
 } from "../store/highlights.selectors";
+import {
+  boardColorAtom,
+  enabledFeaturesAtom,
+  Features,
+} from "../store/config.atoms";
+import { Theme } from "../globals";
 
 interface SquareProps {
   id: number;
@@ -29,7 +34,15 @@ function Square(props: SquareProps) {
   const isVulnerable = useRecoilValue(vulnerableSquares(props.id));
   const isCaptured = useRecoilValue(captureSquares(props.id));
 
+  const checkHighlightsEnabled = useRecoilValue(
+    enabledFeaturesAtom(Features.HIGHLIGHT_CHECK)
+  );
+  const threatHighlightsEnabled = useRecoilValue(
+    enabledFeaturesAtom(Features.HIGHLIGHT_THREATS_ADVANTAGES)
+  );
+
   const size = useRecoilValue(appSize) / 8;
+  const boardColor: string[] = Theme[useRecoilValue(boardColorAtom)];
   const squareRef = useRef<HTMLDivElement>(null);
   const boardRect = squareRef.current?.parentElement?.getBoundingClientRect();
   console.log(`Square ${props.id} render`);
@@ -38,7 +51,7 @@ function Square(props: SquareProps) {
       ref={squareRef}
       id={`chess-ui-square-${props.id}`}
       className="square"
-      style={{ backgroundColor: BoardColor[paritySq(props.id)] }}
+      style={{ backgroundColor: boardColor[paritySq(props.id)] }}
     >
       {isSelected ? (
         <div
@@ -52,19 +65,19 @@ function Square(props: SquareProps) {
           className="highlight movable"
         ></div>
       ) : null}
-      {isCheck ? (
+      {isCheck && checkHighlightsEnabled ? (
         <div
           style={{ width: size / 4, height: size / 4 }}
           className="highlight check"
         ></div>
       ) : null}
-      {isVulnerable ? (
+      {isVulnerable && threatHighlightsEnabled ? (
         <div
           style={{ width: size / 1.2, height: size / 1.2 }}
           className="highlight vulnerable"
         ></div>
       ) : null}
-      {isCaptured ? (
+      {isCaptured && threatHighlightsEnabled ? (
         <div
           style={{ width: size / 1.2, height: size / 1.2 }}
           className="highlight capture"
