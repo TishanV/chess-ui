@@ -1,4 +1,4 @@
-import React from "react"
+import React from "react";
 import { useSetRecoilState } from "recoil";
 import "../../assets/css/navigator.css";
 import { NavigationImages } from "../globals";
@@ -14,71 +14,78 @@ function Navigator() {
   console.log("Navigator render");
   return (
     <div className="navigator">
-      <img
-        className="controls"
+      <NavigationControl
         src={NavigationImages.StartMove}
-        alt="first"
         title="First move"
         onClick={(_) => setMove(1)}
       />
-      <img
-        className="controls"
+      <NavigationControl
         src={NavigationImages.PreviousMove}
-        alt="previous"
         title="Previous move"
         onClick={(_) => setMove((n) => n - 1)}
       />
-      <img
-        className="controls"
+      <NavigationControl
         src={NavigationImages.Play}
-        alt="play"
         title="Play subsequent moves"
+        onClick={() => null}
       />
-      <img
-        className="controls"
+      <NavigationControl
         src={NavigationImages.NextMove}
-        alt="next"
         title="Next move"
         onClick={(_) => setMove((n) => n + 1)}
       />
-      <img
-        className="controls"
+      <NavigationControl
         src={NavigationImages.LastMove}
-        alt="last"
         title="Last Move"
         onClick={(_) => setMove(-1)}
       />
-      <img
-        className="controls"
+      <NavigationControl
         style={{ height: 20 }}
         src={NavigationImages.Undo}
-        alt="undo"
         title="Undo Move"
         onClick={(_) => undoMove(undefined)}
       />
       <div style={{ flex: 1 }} />
-      <img
-        className="controls other"
+      <NavigationControl
+        className="other"
         src={NavigationImages.PGN}
-        alt="pgn/fen"
         title="PGN-FEN"
         onClick={(_) => popupSetter("pgn")}
       />
-      <img
-        className="controls other"
+      <NavigationControl
+        className="other"
         src={NavigationImages.FlipBoard}
-        alt="flip-board"
         title="Flip board"
         onClick={(_) => flip((s) => !s)}
       />
-      <img
-        className="controls other"
+      <NavigationControl
+        className="other"
         src={NavigationImages.Settings}
-        alt="settings"
         title="Settings"
         onClick={(_) => popupSetter("settings")}
       />
     </div>
+  );
+}
+
+type NavigationControlProps = {
+  className?: string;
+  src: string;
+  title: string;
+  onClick: (e?: MouseEvent | React.MouseEvent) => any;
+  style?: object;
+};
+
+function NavigationControl(props: NavigationControlProps) {
+  return (
+    <img
+      className={"controls " + props.className}
+      src={props.src}
+      alt={props.title}
+      title={props.title}
+      style={props.style}
+      onClick={props.onClick}
+    />
   );
 }
 
