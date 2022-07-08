@@ -1,58 +1,36 @@
 import React from "react"
-import Button from "react-bootstrap/Button";
-import Dropdown from "react-bootstrap/Dropdown";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import "../../assets/css/board-manager.css";
-import {
-  gameIDAtom,
-  gameNameAtom,
-  selectedGameIDAtom,
-} from "../store/game.atoms";
+import { Button } from "../components/buttons";
+import { Dropdown } from "../components/dropdown";
+import { gameIDAtom, selectedGameIDAtom } from "../store/game.atoms";
 import { GameBoardAction, gameManager } from "../store/game.events";
+import { boardNameListSelector } from "../store/game.selector";
 
 function BoardManager() {
   const boardIDs = useRecoilValue(gameIDAtom);
+  const boardNames = useRecoilValue(boardNameListSelector);
   const [currentBoardID, setBoard] = useRecoilState(selectedGameIDAtom);
   const dispatchAction = useSetRecoilState(gameManager);
 
   console.log("BoardManager rendered");
   return (
     <div className="board-manager">
-      <Button
-        variant="danger"
+      <Button.RED
+        value="Delete"
         onClick={(_) => dispatchAction(GameBoardAction.REMOVE)}
-      >
-        Delete
-      </Button>{" "}
-      <Button
-        variant="primary"
+      />{" "}
+      <Button.PRIMARY
+        value="Add"
         onClick={(_) => dispatchAction(GameBoardAction.ADD)}
-      >
-        Add
-      </Button>{" "}
-      <Dropdown className="boards">
-        <Dropdown.Toggle variant="secondary">
-          <BoardName id={currentBoardID} />
-        </Dropdown.Toggle>
-        <Dropdown.Menu variant="dark">
-          {boardIDs.map((i) => (
-            <Dropdown.Item
-              key={i}
-              active={i == currentBoardID}
-              onClick={(_) => setBoard(i)}
-            >
-              <BoardName id={i} />
-            </Dropdown.Item>
-          ))}
-        </Dropdown.Menu>
-      </Dropdown>
+      />{" "}
+      <Dropdown
+        selectedIndex={boardIDs.indexOf(currentBoardID)}
+        list={boardNames}
+        onChange={(i) => setBoard(boardIDs[i])}
+      />
     </div>
   );
-}
-
-function BoardName(props: { id: number }) {
-  const name = useRecoilValue(gameNameAtom(props.id));
-  return <label>{name}</label>;
 }
 
 export { BoardManager };
