@@ -21,6 +21,8 @@ import Settings from "../assets/navigations/settings.svg";
 import Undo from "../assets/navigations/undo.svg";
 import Play from "../assets/navigations/play_fill.svg";
 
+import PieceMoveSound from "../assets/piece.mp3";
+
 export const PieceImages: { [piece: string]: string } = {
   K: WhiteKing,
   k: BlackKing,
@@ -55,7 +57,7 @@ const defaultUIProps = {
   width: 500,
 };
 
-export const pieceSound = new Audio("../assets/piece.mp3");
+export const pieceSound = new Audio(PieceMoveSound);
 
 // DYNAMIC PROPS (NEED TO BE IN ATOMS STORE FOR RECOIL]
 export const Theme: { [theme: string]: string[] } = {
