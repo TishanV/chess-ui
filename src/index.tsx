@@ -1,10 +1,10 @@
-import React from "react";
+import React from "react"
 import "bootstrap/dist/css/bootstrap.min.css";
 import { ChessBoard } from "./chessboard";
 import { ScoreBoard } from "./scoreboard";
 import { Navigator } from "./panels";
 import { BoardManager } from "./panels";
-import { SettingsPage } from "./settings";
+import { Settings } from "./settings";
 import { RecoilRoot } from "recoil";
 import { appSize } from "./store";
 import { PGNPage } from "./pgn";
@@ -18,7 +18,7 @@ function ChessUI(props: { width: number }) {
         <BoardManager />
         <Navigator />
         <ScoreBoard />
-        <SettingsPage />
+        <Settings />
         <PGNPage />
       </div>
     </RecoilRoot>

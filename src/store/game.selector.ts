@@ -1,6 +1,8 @@
 import { selectorFamily, selector } from "recoil";
 import { boundNum, toCorePos } from "../utils";
 import {
+  gameIDAtom,
+  gameNameAtom,
   gameStateAtom,
   selectedGameIDAtom,
   selectedStateIDAtom,
@@ -9,6 +11,11 @@ import {
 } from "./game.atoms";
 
 type SquareID = number;
+
+export const boardNameListSelector = selector({
+  key: "board-name-list-selector",
+  get: ({ get }) => get(gameIDAtom).map((id) => get(gameNameAtom(id))),
+});
 
 export const pieceSelector = selectorFamily<string, SquareID>({
   key: "square-selector",
