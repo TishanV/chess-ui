@@ -1,24 +1,15 @@
 import React from "react"
 import { useRef } from "react";
-import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
+import { useRecoilValue, useSetRecoilState } from "recoil";
 import { appSize } from "../store";
 import { Draggable } from "../components/draggable";
 import { movePieceSelector } from "../store/game.events";
 import { pieceSelector } from "../store/game.selector";
 import { toCorePos } from "../utils";
-import {
-  captureSquares,
-  checkSquare,
-  movableSquares,
-  selectedPiece,
-  vulnerableSquares,
-} from "../store/highlights.selectors";
-import {
-  boardColorAtom,
-  enabledFeaturesAtom,
-  Features,
-} from "../store/config.atoms";
+import { selectedPiece } from "../store/highlights.selectors";
+import { boardColorAtom } from "../store/config.atoms";
 import { PieceImages, Theme } from "../globals";
+import { Highlights } from "./highlights";
 
 interface SquareProps {
   id: number;
@@ -28,18 +19,7 @@ function Square(props: SquareProps) {
   const piece = useRecoilValue(pieceSelector(props.id));
   const movePiece = useSetRecoilState(movePieceSelector);
 
-  const [isSelected, selectSquare] = useRecoilState(selectedPiece(props.id));
-  const isMovable = useRecoilValue(movableSquares(props.id));
-  const isCheck = useRecoilValue(checkSquare(props.id));
-  const isVulnerable = useRecoilValue(vulnerableSquares(props.id));
-  const isCaptured = useRecoilValue(captureSquares(props.id));
-
-  const checkHighlightsEnabled = useRecoilValue(
-    enabledFeaturesAtom(Features.HIGHLIGHT_CHECK)
-  );
-  const threatHighlightsEnabled = useRecoilValue(
-    enabledFeaturesAtom(Features.HIGHLIGHT_THREATS_ADVANTAGES)
-  );
+  const selectSquare = useSetRecoilState(selectedPiece(props.id));
 
   const size = useRecoilValue(appSize) / 8;
   const boardColor: string[] = Theme[useRecoilValue(boardColorAtom)];
@@ -53,36 +33,7 @@ function Square(props: SquareProps) {
       className="square"
       style={{ backgroundColor: boardColor[paritySq(props.id)] }}
     >
-      {isSelected ? (
-        <div
-          style={{ width: size, height: size }}
-          className="highlight select"
-        ></div>
-      ) : null}
-      {isMovable ? (
-        <div
-          style={{ width: size / 4, height: size / 4 }}
-          className="highlight movable"
-        ></div>
-      ) : null}
-      {isCheck && checkHighlightsEnabled ? (
-        <div
-          style={{ width: size / 4, height: size / 4 }}
-          className="highlight check"
-        ></div>
-      ) : null}
-      {isVulnerable && threatHighlightsEnabled ? (
-        <div
-          style={{ width: size / 1.2, height: size / 1.2 }}
-          className="highlight vulnerable"
-        ></div>
-      ) : null}
-      {isCaptured && threatHighlightsEnabled ? (
-        <div
-          style={{ width: size / 1.2, height: size / 1.2 }}
-          className="highlight capture"
-        ></div>
-      ) : null}
+      <Highlights id={props.id} size={size} />
       {piece != "-" ? (
         <Draggable
           boundTop={boardRect?.top}
