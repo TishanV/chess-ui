@@ -1,11 +1,11 @@
 import React from "react"
-import "../assets/css/pgn.css";
 import { useRecoilState } from "recoil";
-import { popup } from "./store";
+import { popup } from "../store";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
-import { fenOfGameState, pgnOfGame } from "./store/pgn.selectors";
+import { fenOfGameState, pgnOfGame } from "../store/pgn.selectors";
 import { useRef } from "react";
+import { pgnStyle } from "./style";
 
 function PGNPage() {
   const [currentPopup, setPopup] = useRecoilState(popup);
@@ -15,7 +15,7 @@ function PGNPage() {
   const pgnRef = useRef<HTMLTextAreaElement>(null);
   const fenRef = useRef<HTMLInputElement>(null);
   return currentPopup == "pgn" ? (
-    <div className="pgn-page">
+    <div style={pgnStyle}>
       <Form>
         <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
           <Form.Label>

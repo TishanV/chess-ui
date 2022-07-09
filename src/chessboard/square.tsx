@@ -10,6 +10,7 @@ import { selectedPiece } from "../store/highlights.selectors";
 import { boardColorAtom } from "../store/config.atoms";
 import { PieceImages, Theme } from "../globals";
 import { Highlights } from "./highlights";
+import { squareStyle } from "./style";
 
 interface SquareProps {
   id: number;
@@ -31,7 +32,7 @@ function Square(props: SquareProps) {
       ref={squareRef}
       id={`chess-ui-square-${props.id}`}
       className="square"
-      style={{ backgroundColor: boardColor[paritySq(props.id)] }}
+      style={squareStyle(boardColor[paritySq(props.id)])}
     >
       <Highlights id={props.id} size={size} />
       {piece != "-" ? (

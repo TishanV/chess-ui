@@ -8,6 +8,7 @@ import {
   selectedPiece,
   vulnerableSquares,
 } from "../store/highlights.selectors";
+import { highlightStyles } from "./style";
 
 export type HighlightProps = {
   id: number;
@@ -30,34 +31,19 @@ export function Highlights(props: HighlightProps) {
   return (
     <>
       {isSelected ? (
-        <div
-          style={{ width: props.size, height: props.size }}
-          className="highlight select"
-        ></div>
+        <div style={highlightStyles.SELECT(props.size)}></div>
       ) : null}
       {isMovable ? (
-        <div
-          style={{ width: props.size / 4, height: props.size / 4 }}
-          className="highlight movable"
-        ></div>
+        <div style={highlightStyles.MOVABLE(props.size)}></div>
       ) : null}
       {isCheck && checkHighlightsEnabled ? (
-        <div
-          style={{ width: props.size / 4, height: props.size / 4 }}
-          className="highlight check"
-        ></div>
+        <div style={highlightStyles.CHECK(props.size)}></div>
       ) : null}
       {isVulnerable && threatHighlightsEnabled ? (
-        <div
-          style={{ width: props.size / 1.2, height: props.size / 1.2 }}
-          className="highlight vulnerable"
-        ></div>
+        <div style={highlightStyles.VULNERABLE(props.size)}></div>
       ) : null}
       {isCaptured && threatHighlightsEnabled ? (
-        <div
-          style={{ width: props.size / 1.2, height: props.size / 1.2 }}
-          className="highlight capture"
-        ></div>
+        <div style={highlightStyles.CAPTURE(props.size)}></div>
       ) : null}
     </>
   );

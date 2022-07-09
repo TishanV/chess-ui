@@ -2,6 +2,7 @@ import React from "react"
 import Check from "react-bootstrap/FormCheck";
 import { useRecoilState } from "recoil";
 import { enabledFeaturesAtom, Features } from "../store/config.atoms";
+import { pageStyle } from "./style";
 
 export function HighlightsPage() {
   const [checkState, setCheckState] = useRecoilState(
@@ -11,7 +12,7 @@ export function HighlightsPage() {
     enabledFeaturesAtom(Features.HIGHLIGHT_THREATS_ADVANTAGES)
   );
   return (
-    <div className="page">
+    <div style={pageStyle}>
       <Check
         id={"21"}
         type="checkbox"

@@ -1,9 +1,9 @@
 import React from "react"
 import { Score } from "./score";
-import "../../assets/css/scoreboard.css";
 import { useRecoilValue } from "recoil";
 import { selectedGameIDAtom, stateIDAtom } from "../store/game.atoms";
 import { useRef } from "react";
+import { scoreBoardStyle } from "./style";
 
 function ScoreBoard() {
   const selectedGameId = useRecoilValue(selectedGameIDAtom);
@@ -14,7 +14,7 @@ function ScoreBoard() {
   }
   console.log("Scoreboard render");
   return (
-    <div ref={scoreBoardRef} className="score-board">
+    <div ref={scoreBoardRef} style={scoreBoardStyle}>
       {stateIds.slice(1).map((id) => (
         <Score id={id} key={id} />
       ))}

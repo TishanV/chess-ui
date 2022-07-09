@@ -6,11 +6,12 @@ type DropdownProps = {
   selectedIndex?: number;
   list: string[];
   onChange: (i: number) => any;
+  style?: React.CSSProperties;
 };
 
 export function Dropdown(props: DropdownProps) {
   return (
-    <BootstrapDropdown className="boards">
+    <BootstrapDropdown style={props.style}>
       <BootstrapDropdown.Toggle variant="secondary">
         <label>
           {props.list[props.selectedIndex ?? -1] ?? props.placeholder}

@@ -1,10 +1,10 @@
-import React from "react";
+import React from "react"
 import { useSetRecoilState } from "recoil";
-import "../../assets/css/navigator.css";
 import { NavigationImages } from "../globals";
 import { boardOrientation, popup } from "../store";
 import { removeStateEvent } from "../store/game.events";
 import { stateSelector } from "../store/game.selector";
+import { navigatorStyle, navControlStyles } from "./navigator.style";
 
 function Navigator() {
   const flip = useSetRecoilState(boardOrientation);
@@ -13,7 +13,7 @@ function Navigator() {
   const popupSetter = useSetRecoilState(popup);
   console.log("Navigator render");
   return (
-    <div className="navigator">
+    <div style={navigatorStyle}>
       <NavigationControl
         src={NavigationImages.StartMove}
         title="First move"
@@ -40,28 +40,28 @@ function Navigator() {
         onClick={(_) => setMove(-1)}
       />
       <NavigationControl
-        style={{ height: 20 }}
         src={NavigationImages.Undo}
         title="Undo Move"
+        style={navControlStyles.UNDO}
         onClick={(_) => undoMove(undefined)}
       />
       <div style={{ flex: 1 }} />
       <NavigationControl
-        className="other"
         src={NavigationImages.PGN}
         title="PGN-FEN"
+        style={navControlStyles.OTHER}
         onClick={(_) => popupSetter("pgn")}
       />
       <NavigationControl
-        className="other"
         src={NavigationImages.FlipBoard}
         title="Flip board"
+        style={navControlStyles.OTHER}
         onClick={(_) => flip((s) => !s)}
       />
       <NavigationControl
-        className="other"
         src={NavigationImages.Settings}
         title="Settings"
+        style={navControlStyles.OTHER}
         onClick={(_) => popupSetter("settings")}
       />
     </div>
@@ -69,7 +69,6 @@ function Navigator() {
 }
 
 type NavigationControlProps = {
-  className?: string;
   src: string;
   title: string;
   onClick: (e?: MouseEvent | React.MouseEvent) => any;
@@ -79,11 +78,11 @@ type NavigationControlProps = {
 function NavigationControl(props: NavigationControlProps) {
   return (
     <img
-      className={"controls " + props.className}
+      className="nav-controls"
       src={props.src}
       alt={props.title}
       title={props.title}
-      style={props.style}
+      style={{ ...navControlStyles.BASE, ...props.style }}
       onClick={props.onClick}
     />
   );

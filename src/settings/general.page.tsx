@@ -8,6 +8,7 @@ import {
   Features,
 } from "../store/config.atoms";
 import { Theme } from "../globals";
+import { pageStyle } from "./style";
 
 export function GeneralPage() {
   const [selectedTheme, setTheme] = useRecoilState(boardColorAtom);
@@ -18,7 +19,7 @@ export function GeneralPage() {
     enabledFeaturesAtom(Features.PIECE_SOUND)
   );
   return (
-    <div className="page">
+    <div style={pageStyle}>
       <label>Theme:</label>
       <Select
         size="sm"

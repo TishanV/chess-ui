@@ -4,6 +4,7 @@ import { useRecoilValue, useSetRecoilState } from "recoil";
 import { StateID } from "../store/game.atoms";
 import { scoreSelector, stateSelector } from "../store/game.selector";
 import { enabledFeaturesAtom, Features } from "../store/config.atoms";
+import { scoreStyle } from "./style";
 
 interface ScoreProps {
   id: StateID;
@@ -21,8 +22,7 @@ function Score(props: ScoreProps) {
   console.log(`Score ${props.id} render`);
   return (
     <div
-      className="score"
-      style={{ backgroundColor: scoreColor[+isSelected] }}
+      style={{ ...scoreStyle, backgroundColor: scoreColor[+isSelected] }}
       onClick={(_) => selectID(props.id)}
     >
       {pieceSymbolEnabled ? replacePieceChar(numberScore) : numberScore}
