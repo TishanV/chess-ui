@@ -6,6 +6,10 @@ type ButtonProps = {
   onClick: (e: MouseEvent | React.MouseEvent) => any;
 };
 
+type ToggleButtonProps = ButtonProps & {
+  enable: boolean;
+};
+
 export const Button = {
   PRIMARY: (props: ButtonProps) => (
     <BootstrapButton variant="primary" onClick={props.onClick}>
@@ -19,6 +23,14 @@ export const Button = {
   ),
   RED: (props: ButtonProps) => (
     <BootstrapButton variant="danger" onClick={props.onClick}>
+      <label>{props.value}</label>
+    </BootstrapButton>
+  ),
+  TOGGLE: (props: ToggleButtonProps) => (
+    <BootstrapButton
+      variant={props.enable ? "primary" : "outline-primary"}
+      onClick={props.onClick}
+    >
       <label>{props.value}</label>
     </BootstrapButton>
   ),

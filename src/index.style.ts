@@ -7,4 +7,5 @@ export const chessUIBaseStyle: React.CSSProperties = {
 export const sidePanelStyle: React.CSSProperties = {
   display: "flex",
   flexDirection: "column",
+  width: "300px",
 };

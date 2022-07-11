@@ -3,11 +3,11 @@ import { useRef } from "react";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { appSize } from "../store";
 import { Draggable } from "../components/draggable";
-import { movePieceSelector } from "../store/game.events";
+import { movePieceSelector, showPromotion } from "../store/game.events";
 import { pieceSelector } from "../store/game.selector";
 import { toCorePos } from "../utils";
 import { selectedPiece } from "../store/highlights.selectors";
-import { boardColorAtom } from "../store/config.atoms";
+import { boardColorAtom, popupAtom } from "../store/config.atoms";
 import { PieceImages, Theme } from "../globals";
 import { Highlights } from "./highlights";
 import { squareStyle } from "./style";
@@ -17,21 +17,24 @@ interface SquareProps {
 }
 
 function Square(props: SquareProps) {
+  const squareRef = useRef<HTMLDivElement>(null);
+  const size = useRecoilValue(appSize) / 8;
+  const boardColor: string[] = Theme[useRecoilValue(boardColorAtom)];
+  const boardRect = squareRef.current?.parentElement?.getBoundingClientRect();
+
   const piece = useRecoilValue(pieceSelector(props.id));
   const movePiece = useSetRecoilState(movePieceSelector);
 
   const selectSquare = useSetRecoilState(selectedPiece(props.id));
 
-  const size = useRecoilValue(appSize) / 8;
-  const boardColor: string[] = Theme[useRecoilValue(boardColorAtom)];
-  const squareRef = useRef<HTMLDivElement>(null);
-  const boardRect = squareRef.current?.parentElement?.getBoundingClientRect();
+  const setPopup = useSetRecoilState(popupAtom);
+  const setPromotion = useSetRecoilState(showPromotion);
   console.log(`Square ${props.id} render`);
   return (
     <div
       ref={squareRef}
-      id={`chess-ui-square-${props.id}`}
       className="square"
+      id={`chess-ui-square-${props.id}`}
       style={squareStyle(boardColor[paritySq(props.id)])}
     >
       <Highlights id={props.id} size={size} />
@@ -44,10 +47,16 @@ function Square(props: SquareProps) {
           onDragStart={(_) => selectSquare(true)}
           onDragEnd={(e) => {
             selectSquare(false);
-            movePiece(moveAction(props.id, e.clientX, e.clientY));
+            const cords = moveAction(props.id, e.clientX, e.clientY);
+            if (isPromotion(piece, cords[1])) {
+              setPromotion({ position: [e.clientX, e.clientY], cords: cords });
+              document.addEventListener("mousedown", () => setPopup(""), {
+                once: true,
+              });
+            } else movePiece(cords);
           }}
         >
-          <img src={piecePath(piece)} alt="piece" width={size * 0.95} />
+          <img src={PieceImages[piece]} alt="piece" width={size * 0.95} />
         </Draggable>
       ) : null}
     </div>
@@ -57,10 +66,6 @@ function Square(props: SquareProps) {
 // HELPER FUNCTIONS
 function paritySq(id: number) {
   return ((id % 8) + ~~(id / 8)) % 2;
-}
-
-function piecePath(piece: string) {
-  return PieceImages[piece];
 }
 
 function squareIDFromCords(x: number, y: number) {
@@ -76,6 +81,12 @@ function moveAction(fromID: number, x: number, y: number): [number, number] {
   const from = toCorePos(fromID);
   if (toID !== undefined) return [from, toCorePos(toID)];
   return [from, from];
+}
+
+function isPromotion(piece: string, to: number): boolean {
+  if (piece === "P" && to < 19) return true;
+  if (piece === "p" && to > 80) return true;
+  return false;
 }
 
 export { Square };
