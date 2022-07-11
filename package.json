@@ -43,5 +43,13 @@
   "peerDependencies": {
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
-  }
+  },
+  "keyword": [
+    "chess",
+    "chess ui",
+    "chess gui",
+    "chess frontend",
+    "react chess",
+    "chess app"
+  ]
 }
