@@ -6,21 +6,23 @@ import { fromPGN, newPGNObject, toPGN } from "../core/pgn";
 import { promotionOf, toCordsFromSAN } from "../core/san";
 
 import {
-  gameIDAtom,
-  gameStateAtom,
-  selectedGameIDAtom,
-  selectedStateIDAtom,
-  stateIDAtom,
+  gameListGetter,
+  gameListOperations,
+  gamesList,
+  GameState,
+  gameState,
+  gameStateOf,
+  gameStateOperations,
+  stateList,
+  stateListGetter,
+  stateListOperations,
 } from "./game.atoms";
 
 export const pgnOfGame = selector({
   key: "pgn-of-game-selector",
   get: ({ get }) => {
-    const gameID = get(selectedGameIDAtom);
-    const stateIDs = get(stateIDAtom(gameID));
-    const scores = stateIDs
-      .slice(1)
-      .map((id) => get(gameStateAtom([gameID, id])).sanMove);
+    const stateIDs = (get(stateList) as stateListGetter).list;
+    const scores = stateIDs.slice(1).map((id) => get(gameStateOf(id)).sanMove);
     return toPGN(newPGNObject(scores));
   },
   set: ({ set, get }, pgn) => {
@@ -28,10 +30,9 @@ export const pgnOfGame = selector({
     const pgnObj = fromPGN(pgn);
     if (!pgnObj[0].score.length) return;
 
-    const newGID = Math.max(...get(gameIDAtom)) + 1;
-    set(gameIDAtom, (a) => [...a, newGID]);
-
-    let currentState = get(gameStateAtom([newGID, 0])).boardState;
+    set(gamesList, { operation: gameListOperations.ADD });
+    const newGID = Math.max(...(get(gamesList) as gameListGetter).list) + 1;
+    let currentState = get(gameStateOf(0)).boardState;
     let moves = 1;
     for (let score of pgnObj[0].score) {
       const cords = toCordsFromSAN(score, currentState);
@@ -39,31 +40,34 @@ export const pgnOfGame = selector({
       if (cords) {
         const newState = doMove(currentState, cords, promotion);
         if (newState === undefined) break;
-        set(gameStateAtom([newGID, moves]), {
+        const newGameState = {
           boardState: newState,
           sanMove: score,
+        };
+        set(gameState, {
+          operation: gameStateOperations.MODIFY,
+          payload: newGameState,
+          config: { gameID: newGID, stateID: moves },
         });
         currentState = newState;
         moves += 1;
       }
     }
-    set(selectedGameIDAtom, newGID);
-    set(
-      stateIDAtom(newGID),
-      Array(moves)
-        .fill(0)
-        .map((_, i) => i)
-    );
-    set(selectedStateIDAtom(newGID), moves - 1);
+    const newIDs = Array(moves)
+      .fill(0)
+      .map((_, i) => i);
+    set(stateList, {
+      operation: stateListOperations.REPLACE,
+      payload: newIDs,
+      config: { gameID: newGID },
+    });
   },
 });
 
 export const fenOfGameState = selector({
   key: "fen-of-game-state-selector",
   get: ({ get }) => {
-    const gameID = get(selectedGameIDAtom);
-    const stateID = get(selectedStateIDAtom(gameID));
-    const boardState = get(gameStateAtom([gameID, stateID])).boardState;
+    const boardState = (get(gameState) as GameState).boardState;
     return toFEN(boardState);
   },
   set: ({ set, get }, fen) => {
@@ -73,12 +77,14 @@ export const fenOfGameState = selector({
       return;
     }
     const state = fenToBoardState(fen);
-    const gameID = get(selectedGameIDAtom);
-    set(stateIDAtom(gameID), [0]);
-    set(gameStateAtom([gameID, 0]), {
-      boardState: state,
-      sanMove: "",
+    set(gameState, {
+      operation: gameStateOperations.MODIFY,
+      payload: { boardState: state, sanMove: "" },
+      config: { stateID: 0 },
     });
-    set(selectedStateIDAtom(gameID), 0);
+    set(stateList, {
+      operation: stateListOperations.REPLACE,
+      payload: [0],
+    });
   },
 });

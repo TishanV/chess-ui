@@ -1,11 +1,7 @@
 import { atom, selector, selectorFamily } from "recoil";
 import { listCaptures, listVulnerables } from "../core/attackable";
 import { toCorePos } from "../utils";
-import {
-  gameStateAtom,
-  selectedGameIDAtom,
-  selectedStateIDAtom,
-} from "./game.atoms";
+import { GameState, gameState } from "./game.atoms";
 import { boardOrientation } from "./index";
 
 export const selectedSquare = atom<number>({
@@ -37,9 +33,7 @@ export const movableSquares = selectorFamily<boolean, number>({
     ({ get }) => {
       const squareID = get(selectedSquare);
       if (squareID === -1) return false;
-      const gameID = get(selectedGameIDAtom);
-      const stateID = get(selectedStateIDAtom(gameID));
-      const movesMap = get(gameStateAtom([gameID, stateID])).boardState.moves;
+      const movesMap = (get(gameState) as GameState).boardState.moves;
       return movesMap[toCorePos(squareID)]?.includes(toCorePos(id)) ?? false;
     },
 });
@@ -49,9 +43,7 @@ export const checkSquare = selectorFamily<boolean, number>({
   get:
     (id) =>
     ({ get }) => {
-      const gameID = get(selectedGameIDAtom);
-      const stateID = get(selectedStateIDAtom(gameID));
-      const boardState = get(gameStateAtom([gameID, stateID])).boardState;
+      const boardState = (get(gameState) as GameState).boardState;
       const kingPos = boardState.board.indexOf(
         boardState.player === "w" ? "K" : "k"
       );
@@ -64,9 +56,7 @@ export const vulnerableSquares = selectorFamily<boolean, number>({
   get:
     (id) =>
     ({ get }) => {
-      const gameID = get(selectedGameIDAtom);
-      const stateID = get(selectedStateIDAtom(gameID));
-      const boardState = get(gameStateAtom([gameID, stateID])).boardState;
+      const boardState = (get(gameState) as GameState).boardState;
       const player = get(playerOnBase);
       return listVulnerables({ ...boardState, player }, true).includes(
         toCorePos(id)
@@ -79,9 +69,7 @@ export const captureSquares = selectorFamily<boolean, number>({
   get:
     (id) =>
     ({ get }) => {
-      const gameID = get(selectedGameIDAtom);
-      const stateID = get(selectedStateIDAtom(gameID));
-      const boardState = get(gameStateAtom([gameID, stateID])).boardState;
+      const boardState = (get(gameState) as GameState).boardState;
       const player = get(playerOnBase);
       return listCaptures({ ...boardState, player }, true).includes(
         toCorePos(id)

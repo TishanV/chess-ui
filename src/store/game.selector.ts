@@ -1,20 +1,23 @@
 import { selectorFamily, selector } from "recoil";
-import { boundNum, toCorePos } from "../utils";
+import { toCorePos } from "../utils";
 import {
-  gameIDAtom,
+  gameListGetter,
   gameNameAtom,
-  gameStateAtom,
-  selectedGameIDAtom,
-  selectedStateIDAtom,
+  gamesList,
+  GameState,
+  gameState,
+  gameStateOf,
   StateID,
-  stateIDAtom,
+  stateList,
+  stateListGetter,
 } from "./game.atoms";
 
 type SquareID = number;
 
 export const boardNameListSelector = selector({
   key: "board-name-list-selector",
-  get: ({ get }) => get(gameIDAtom).map((id) => get(gameNameAtom(id))),
+  get: ({ get }) =>
+    (get(gamesList) as gameListGetter).list.map((id) => get(gameNameAtom(id))),
 });
 
 export const pieceSelector = selectorFamily<string, SquareID>({
@@ -22,10 +25,8 @@ export const pieceSelector = selectorFamily<string, SquareID>({
   get:
     (id) =>
     ({ get }) => {
-      const selGameID = get(selectedGameIDAtom);
-      const selStateID = get(selectedStateIDAtom(selGameID));
-      const board = get(gameStateAtom([selGameID, selStateID])).boardState
-        .board;
+      const gState = get(gameState) as GameState;
+      const board = gState.boardState.board;
       return board[toCorePos(id)];
     },
 });
@@ -35,22 +36,9 @@ export const scoreSelector = selectorFamily<string, StateID>({
   get:
     (id) =>
     ({ get }) => {
-      const selGameID = get(selectedGameIDAtom);
-      const score = get(gameStateAtom([selGameID, id])).sanMove;
-      const selStateID = get(selectedStateIDAtom(selGameID));
+      const score = get(gameStateOf(id)).sanMove;
+      const { selected: selStateID } = get(stateList) as stateListGetter;
       const isSelected = selStateID === id;
       return JSON.stringify({ score, isSelected });
     },
-});
-
-export const stateSelector = selector<StateID>({
-  key: "state-selector",
-  get: ({ get }) => get(selectedStateIDAtom(get(selectedGameIDAtom))),
-  set: ({ set, get }, stateID) => {
-    const selGameID = get(selectedGameIDAtom);
-    const maxState = get(stateIDAtom(selGameID)).at(-1) || 0;
-    if (stateID === -1) stateID = maxState;
-    else stateID = boundNum(+stateID, 0, maxState);
-    set(selectedStateIDAtom(selGameID), stateID);
-  },
 });

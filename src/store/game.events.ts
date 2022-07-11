@@ -1,77 +1,70 @@
 import { DefaultValue, selector } from "recoil";
 import { doMove } from "../core/moveable";
 import { toSANMove } from "../core/san";
+import { PromotionPiece } from "../core/types";
 import { pieceSound } from "../globals";
-import { enabledFeaturesAtom, Features } from "./config.atoms";
 import {
-  gameIDAtom,
-  gameStateAtom,
-  selectedGameIDAtom,
-  selectedStateIDAtom,
-  stateIDAtom,
-} from "./game.atoms";
+  enabledFeaturesAtom,
+  Features,
+  popupAtom,
+  popupPosition,
+  promotionCordAtom,
+} from "./config.atoms";
+import { gameState, GameState, gameStateOperations } from "./game.atoms";
 
-export const movePieceSelector = selector<[number, number]>({
+export type movePieceEventArgs =
+  | [number, number]
+  | [number, number, PromotionPiece];
+
+export const movePieceSelector = selector<movePieceEventArgs>({
   key: "move-piece-event",
   get: () => [0, 0],
-  set: ({ set, get }, cords) => {
-    if (cords instanceof DefaultValue) return;
-    const selGID = get(selectedGameIDAtom);
-    const selSID = get(selectedStateIDAtom(selGID));
-    const selState = get(gameStateAtom([selGID, selSID])).boardState;
-    if (!selState.moves[cords[0]]) return;
-    const newState = doMove(selState, cords);
+  set: ({ set, get }, args) => {
+    if (args instanceof DefaultValue) return;
+    const selState = (get(gameState) as GameState).boardState;
+    if (!selState.moves[args[0]]) return;
+    const newState = doMove(selState, [args[0], args[1]], args[2]);
     if (newState) {
-      const newStateID = selSID + 1;
-      const san = toSANMove(cords, selState, newState);
-      set(gameStateAtom([selGID, newStateID]), {
+      const san = toSANMove([args[0], args[1]], selState, newState);
+      const newGameState = {
         boardState: newState,
         sanMove: san,
+      };
+      set(gameState, {
+        operation: gameStateOperations.NEW,
+        payload: newGameState,
       });
-      set(stateIDAtom(selGID), (stateIDs) => {
-        const newStateIDs = [...stateIDs, newStateID];
-        return newStateIDs.slice(0, newStateIDs.indexOf(newStateID) + 1);
-      });
-      set(selectedStateIDAtom(selGID), newStateID);
       if (get(enabledFeaturesAtom(Features.PIECE_SOUND))) pieceSound.play();
-      console.log("moved", san, newStateID);
+      console.log("moved", san);
     }
   },
 });
 
-export enum GameBoardAction {
-  ADD,
-  REMOVE,
-}
-
-export const gameManager = selector<GameBoardAction>({
-  key: "game-manage-event",
-  get: () => GameBoardAction.ADD,
-  set: ({ set, get }, action) => {
-    const idList = get(gameIDAtom);
-    if (action === GameBoardAction.ADD) {
-      const newID = Math.max(...idList) + 1;
-      set(gameIDAtom, (a) => [...a, newID]);
-      set(selectedGameIDAtom, newID);
-    } else if (action === GameBoardAction.REMOVE && idList.length > 1) {
-      const selGID = get(selectedGameIDAtom);
-      const prevID = idList.at(idList.indexOf(selGID) - 1);
-      set(gameIDAtom, (a) => a.filter((i) => i !== selGID));
-      set(selectedGameIDAtom, prevID || 0);
-    }
+export const promoteEvent = selector({
+  key: "promotion-event",
+  get: () => "",
+  set: ({ set, get }, promotionPiece) => {
+    if (promotionPiece instanceof DefaultValue) return;
+    const args = [...get(promotionCordAtom), promotionPiece as PromotionPiece];
+    console.log(args);
+    set(movePieceSelector, args as movePieceEventArgs);
   },
 });
 
-export const removeStateEvent = selector({
-  key: "remoove-state-event",
-  get: () => undefined,
-  set: ({ set, get }) => {
-    const selGID = get(selectedGameIDAtom);
-    const selSID = get(selectedStateIDAtom(selGID));
-    if (selSID <= 0) return;
-    set(stateIDAtom(selGID), (states) =>
-      states.slice(0, states.indexOf(selSID))
-    );
-    set(selectedStateIDAtom(selGID), (id) => id - 1);
+export type showPromotionArgs = {
+  position: [number, number];
+  cords: [number, number];
+};
+
+export const showPromotion = selector<showPromotionArgs>({
+  key: "show-promotion-selector",
+  get: () => ({ position: [0, 0], cords: [0, 0] }),
+  set: ({ set, get }, args) => {
+    if (args instanceof DefaultValue) return;
+    const selState = (get(gameState) as GameState).boardState;
+    if (!selState.moves[args.cords[0]]) return;
+    set(popupAtom, "promotion");
+    set(popupPosition, `${args.position[0]},${args.position[1]}`);
+    set(promotionCordAtom, args.cords);
   },
 });

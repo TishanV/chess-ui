@@ -17,3 +17,18 @@ export const enabledFeaturesAtom = atomFamily<boolean, Features>({
   key: "enable-featurs-atom",
   default: true,
 });
+
+export const popupAtom = atom({
+  key: "popup-atom",
+  default: "",
+});
+
+export const popupPosition = atom({
+  key: "popup-position-atom",
+  default: "0,0",
+});
+
+export const promotionCordAtom = atom<[number, number]>({
+  key: "promotion-cords-atom",
+  default: [0, 0],
+});
