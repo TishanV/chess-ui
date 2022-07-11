@@ -1,6 +1,6 @@
 {
   "name": "chess-ui",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A react ui library for integrating chess into web apps",
   "main": "dist/umd/index.js",
   "module": "dist/esm/index.js",
