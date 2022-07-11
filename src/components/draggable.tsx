@@ -25,7 +25,7 @@ function Draggable(props: DraggableProps) {
     const boxLeft = event.currentTarget.getBoundingClientRect().left;
     const boxBottom = event.currentTarget.getBoundingClientRect().bottom;
     const boxRight = event.currentTarget.getBoundingClientRect().right;
-    console.log(boxTop, boxLeft, boxBottom, boxRight);
+
     const onMoveEvent = (e: MouseEvent) => {
       e.preventDefault();
       if (dragContainerRef.current) {

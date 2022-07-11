@@ -1,4 +1,4 @@
-import React from "react"
+import React from "react";
 import { unselectedScoreColor, Theme } from "../globals";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { StateID, stateList, stateListOperations } from "../store/game.atoms";
@@ -29,7 +29,7 @@ function Score(props: ScoreProps) {
   const selectID = (id: number) =>
     setStateList({ operation: stateListOperations.SELECT, payload: id });
   const numberScore = numerizeScore(score, props.id - 1);
-  console.log(`Score ${props.id} render`);
+
   return (
     <div
       style={{

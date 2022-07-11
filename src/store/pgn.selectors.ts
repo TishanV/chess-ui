@@ -73,7 +73,6 @@ export const fenOfGameState = selector({
   set: ({ set, get }, fen) => {
     if (fen instanceof DefaultValue) return;
     if (!validateFEN(fen)) {
-      console.log("FEN not valid", fen);
       return;
     }
     const state = fenToBoardState(fen);

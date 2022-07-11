@@ -35,7 +35,6 @@ export const movePieceSelector = selector<movePieceEventArgs>({
         payload: newGameState,
       });
       if (get(enabledFeaturesAtom(Features.PIECE_SOUND))) pieceSound.play();
-      console.log("moved", san);
     }
   },
 });
@@ -46,7 +45,6 @@ export const promoteEvent = selector({
   set: ({ set, get }, promotionPiece) => {
     if (promotionPiece instanceof DefaultValue) return;
     const args = [...get(promotionCordAtom), promotionPiece as PromotionPiece];
-    console.log(args);
     set(movePieceSelector, args as movePieceEventArgs);
   },
 });

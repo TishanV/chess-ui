@@ -1,4 +1,4 @@
-import React from "react"
+import React from "react";
 import { Score } from "./score";
 import { useRecoilValue } from "recoil";
 import { stateList, stateListGetter } from "../store/game.atoms";
@@ -11,7 +11,7 @@ function ScoreBoard() {
   if (scoreBoardRef.current) {
     scoreBoardRef.current.scrollTop = scoreBoardRef.current.scrollHeight;
   }
-  console.log("Scoreboard render");
+
   return (
     <div ref={scoreBoardRef} style={scoreBoardStyle}>
       {stateIds.slice(1).map((id) => (

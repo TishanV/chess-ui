@@ -1,4 +1,4 @@
-import React from "react"
+import React from "react";
 import { useSetRecoilState } from "recoil";
 import { NavigationImages } from "../globals";
 import { boardOrientation, popup } from "../store";
@@ -36,7 +36,7 @@ function Navigator() {
     });
   const undoMove = () =>
     setStateList({ operation: stateListOperations.REMOVE });
-  console.log("Navigator render");
+
   return (
     <div style={navigatorStyle}>
       <NavigationControl

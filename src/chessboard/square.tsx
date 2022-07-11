@@ -1,4 +1,4 @@
-import React from "react"
+import React from "react";
 import { useRef } from "react";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { appSize } from "../store";
@@ -29,7 +29,6 @@ function Square(props: SquareProps) {
 
   const setPopup = useSetRecoilState(popupAtom);
   const setPromotion = useSetRecoilState(showPromotion);
-  console.log(`Square ${props.id} render`);
   return (
     <div
       ref={squareRef}

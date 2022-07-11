@@ -1,4 +1,4 @@
-import React from "react"
+import React from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { Button } from "../components/buttons";
 import { Dropdown } from "../components/dropdown";
@@ -14,7 +14,7 @@ function BoardManager() {
   const boardNames = useRecoilValue(boardNameListSelector);
   const [boardListData, setBoardAction] = useRecoilState(gamesList);
   const { list, selected } = boardListData as gameListGetter;
-  console.log("BoardManager rendered", boardListData);
+
   return (
     <div style={boardManagerStyle}>
       <Dropdown

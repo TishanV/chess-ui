@@ -1,4 +1,4 @@
-import React from "react"
+import React from "react";
 import { Square } from "./square";
 import { appSize, boardOrientation } from "../store";
 import { useRecoilValue, useSetRecoilState } from "recoil";
@@ -10,7 +10,6 @@ import { promoteEvent } from "../store/game.events";
 function ChessBoard() {
   const size = useRecoilValue(appSize);
   const flipped = useRecoilValue(boardOrientation);
-  console.log("ChessBoard render");
   return (
     <div className="chess-board" style={chessBoardStyle(size)}>
       {Array(64)
@@ -31,7 +30,7 @@ function PromotionCard() {
     <PieceCard
       position={[+position[0], +position[1]]}
       pieces={["Q", "R", "B", "N"]}
-      onClick={(p) => [console.log("Piece", p), setPromotion(p)]}
+      onClick={(p) => setPromotion(p)}
     />
   ) : null;
 }
