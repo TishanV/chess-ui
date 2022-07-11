@@ -1,33 +1,47 @@
-import React from "react"
-import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
+import React from "react";
+import { useRecoilState, useRecoilValue } from "recoil";
 import { Button } from "../components/buttons";
 import { Dropdown } from "../components/dropdown";
-import { gameIDAtom, selectedGameIDAtom } from "../store/game.atoms";
-import { GameBoardAction, gameManager } from "../store/game.events";
+import {
+  gamesList,
+  gameListGetter,
+  gameListOperations,
+} from "../store/game.atoms";
 import { boardNameListSelector } from "../store/game.selector";
 import { boardManagerStyle, boardNamesStyle } from "./boardmanager.style";
 
 function BoardManager() {
-  const boardIDs = useRecoilValue(gameIDAtom);
   const boardNames = useRecoilValue(boardNameListSelector);
-  const [currentBoardID, setBoard] = useRecoilState(selectedGameIDAtom);
-  const dispatchAction = useSetRecoilState(gameManager);
-
-  console.log("BoardManager rendered");
+  const [boardListData, setBoardAction] = useRecoilState(gamesList);
+  const { list, selected } = boardListData as gameListGetter;
+  console.log("BoardManager rendered", boardListData);
   return (
     <div style={boardManagerStyle}>
       <Button.RED
-        value="Delete"
-        onClick={(_) => dispatchAction(GameBoardAction.REMOVE)}
+        value="DL"
+        onClick={(_) =>
+          setBoardAction({
+            operation: gameListOperations.REMOVE,
+          })
+        }
       />{" "}
       <Button.PRIMARY
-        value="Add"
-        onClick={(_) => dispatchAction(GameBoardAction.ADD)}
+        value="ADD"
+        onClick={(_) =>
+          setBoardAction({
+            operation: gameListOperations.ADD,
+          })
+        }
       />{" "}
       <Dropdown
-        selectedIndex={boardIDs.indexOf(currentBoardID)}
+        selectedIndex={list.indexOf(selected)}
         list={boardNames}
-        onChange={(i) => setBoard(boardIDs[i])}
+        onChange={(i) =>
+          setBoardAction({
+            operation: gameListOperations.SELECT,
+            payload: list[i],
+          })
+        }
         style={boardNamesStyle}
       />
     </div>

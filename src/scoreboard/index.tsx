@@ -1,13 +1,12 @@
 import React from "react"
 import { Score } from "./score";
 import { useRecoilValue } from "recoil";
-import { selectedGameIDAtom, stateIDAtom } from "../store/game.atoms";
+import { stateList, stateListGetter } from "../store/game.atoms";
 import { useRef } from "react";
 import { scoreBoardStyle } from "./style";
 
 function ScoreBoard() {
-  const selectedGameId = useRecoilValue(selectedGameIDAtom);
-  const stateIds = useRecoilValue(stateIDAtom(selectedGameId));
+  const stateIds = (useRecoilValue(stateList) as stateListGetter).list;
   const scoreBoardRef = useRef<HTMLDivElement>(null);
   if (scoreBoardRef.current) {
     scoreBoardRef.current.scrollTop = scoreBoardRef.current.scrollHeight;

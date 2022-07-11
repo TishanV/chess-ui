@@ -1,8 +1,8 @@
 import React from "react"
 import { scoreColor } from "../globals";
 import { useRecoilValue, useSetRecoilState } from "recoil";
-import { StateID } from "../store/game.atoms";
-import { scoreSelector, stateSelector } from "../store/game.selector";
+import { StateID, stateList, stateListOperations } from "../store/game.atoms";
+import { scoreSelector } from "../store/game.selector";
 import { enabledFeaturesAtom, Features } from "../store/config.atoms";
 import { scoreStyle } from "./style";
 
@@ -14,10 +14,14 @@ function Score(props: ScoreProps) {
   const { score, isSelected } = JSON.parse(
     useRecoilValue(scoreSelector(props.id))
   );
-  const selectID = useSetRecoilState(stateSelector);
+  const setStateList = useSetRecoilState(stateList);
+
   const pieceSymbolEnabled = useRecoilValue(
     enabledFeaturesAtom(Features.PIECE_SYMBOL)
   );
+
+  const selectID = (id: number) =>
+    setStateList({ operation: stateListOperations.SELECT, payload: id });
   const numberScore = numerizeScore(score, props.id - 1);
   console.log(`Score ${props.id} render`);
   return (

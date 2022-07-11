@@ -2,27 +2,52 @@ import React from "react"
 import { useSetRecoilState } from "recoil";
 import { NavigationImages } from "../globals";
 import { boardOrientation, popup } from "../store";
-import { removeStateEvent } from "../store/game.events";
-import { stateSelector } from "../store/game.selector";
+import {
+  stateList,
+  stateListOperations,
+  stateListSelectOperations,
+} from "../store/game.atoms";
 import { navigatorStyle, navControlStyles } from "./navigator.style";
 
 function Navigator() {
   const flip = useSetRecoilState(boardOrientation);
-  const setMove = useSetRecoilState(stateSelector);
-  const undoMove = useSetRecoilState(removeStateEvent);
   const popupSetter = useSetRecoilState(popup);
+  const setStateList = useSetRecoilState(stateList);
+
+  const firstMove = () =>
+    setStateList({
+      operation: stateListOperations.SELECT,
+      payload: stateListSelectOperations.FIRST,
+    });
+  const previousMove = () =>
+    setStateList({
+      operation: stateListOperations.SELECT,
+      payload: stateListSelectOperations.PREVIOUS,
+    });
+  const nextMove = () =>
+    setStateList({
+      operation: stateListOperations.SELECT,
+      payload: stateListSelectOperations.NEXT,
+    });
+  const lastMove = () =>
+    setStateList({
+      operation: stateListOperations.SELECT,
+      payload: stateListSelectOperations.LAST,
+    });
+  const undoMove = () =>
+    setStateList({ operation: stateListOperations.REMOVE });
   console.log("Navigator render");
   return (
     <div style={navigatorStyle}>
       <NavigationControl
         src={NavigationImages.StartMove}
         title="First move"
-        onClick={(_) => setMove(1)}
+        onClick={firstMove}
       />
       <NavigationControl
         src={NavigationImages.PreviousMove}
         title="Previous move"
-        onClick={(_) => setMove((n) => n - 1)}
+        onClick={previousMove}
       />
       <NavigationControl
         src={NavigationImages.Play}
@@ -32,18 +57,18 @@ function Navigator() {
       <NavigationControl
         src={NavigationImages.NextMove}
         title="Next move"
-        onClick={(_) => setMove((n) => n + 1)}
+        onClick={nextMove}
       />
       <NavigationControl
         src={NavigationImages.LastMove}
         title="Last Move"
-        onClick={(_) => setMove(-1)}
+        onClick={lastMove}
       />
       <NavigationControl
         src={NavigationImages.Undo}
         title="Undo Move"
         style={navControlStyles.UNDO}
-        onClick={(_) => undoMove(undefined)}
+        onClick={undoMove}
       />
       <div style={{ flex: 1 }} />
       <NavigationControl
