@@ -8,6 +8,7 @@ export const boardColorAtom = atom({
 export enum Features {
   HIGHLIGHT_MOVES,
   HIGHLIGHT_CHECK,
+  HIGHLIGHT_CHECKMATE_MOVE,
   HIGHLIGHT_THREATS_ADVANTAGES,
   PIECE_SYMBOL,
   PIECE_SOUND,
@@ -15,7 +16,7 @@ export enum Features {
 
 export const enabledFeaturesAtom = atomFamily<boolean, Features>({
   key: "enable-featurs-atom",
-  default: true,
+  default: false,
 });
 
 export const popupAtom = atom({

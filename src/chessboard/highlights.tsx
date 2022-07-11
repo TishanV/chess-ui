@@ -4,6 +4,8 @@ import { enabledFeaturesAtom, Features } from "../store/config.atoms";
 import {
   captureSquares,
   checkSquare,
+  mateHighlight,
+  mateSquares,
   movableSquares,
   selectedPiece,
   vulnerableSquares,
@@ -21,28 +23,39 @@ export function Highlights(props: HighlightProps) {
   const isCheck = useRecoilValue(checkSquare(props.id));
   const isVulnerable = useRecoilValue(vulnerableSquares(props.id));
   const isCaptured = useRecoilValue(captureSquares(props.id));
+  const mateDir = useRecoilValue(mateSquares(props.id));
+  const mateHighlighter = {
+    [mateHighlight.FROM]: highlightStyles.MATE_FROM,
+    [mateHighlight.TO]: highlightStyles.MATE_TO,
+  };
 
-  const checkHighlightsEnabled = useRecoilValue(
+  const checkMateEnabled = useRecoilValue(
+    enabledFeaturesAtom(Features.HIGHLIGHT_CHECKMATE_MOVE)
+  );
+  const checkEnabled = useRecoilValue(
     enabledFeaturesAtom(Features.HIGHLIGHT_CHECK)
   );
-  const threatHighlightsEnabled = useRecoilValue(
+  const threatsEnabled = useRecoilValue(
     enabledFeaturesAtom(Features.HIGHLIGHT_THREATS_ADVANTAGES)
   );
   return (
     <>
+      {mateDir !== null && checkMateEnabled ? (
+        <div style={mateHighlighter[mateDir](props.size)}></div>
+      ) : null}
       {isSelected ? (
         <div style={highlightStyles.SELECT(props.size)}></div>
       ) : null}
       {isMovable ? (
         <div style={highlightStyles.MOVABLE(props.size)}></div>
       ) : null}
-      {isCheck && checkHighlightsEnabled ? (
+      {isCheck && checkEnabled ? (
         <div style={highlightStyles.CHECK(props.size)}></div>
       ) : null}
-      {isVulnerable && threatHighlightsEnabled ? (
+      {isVulnerable && threatsEnabled ? (
         <div style={highlightStyles.VULNERABLE(props.size)}></div>
       ) : null}
-      {isCaptured && threatHighlightsEnabled ? (
+      {isCaptured && threatsEnabled ? (
         <div style={highlightStyles.CAPTURE(props.size)}></div>
       ) : null}
     </>

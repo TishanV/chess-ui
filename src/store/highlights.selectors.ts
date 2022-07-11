@@ -1,5 +1,6 @@
 import { atom, selector, selectorFamily } from "recoil";
 import { listCaptures, listVulnerables } from "../core/attackable";
+import { findMate } from "../core/mateFinder";
 import { toCorePos } from "../utils";
 import { GameState, gameState } from "./game.atoms";
 import { boardOrientation } from "./index";
@@ -74,5 +75,23 @@ export const captureSquares = selectorFamily<boolean, number>({
       return listCaptures({ ...boardState, player }, true).includes(
         toCorePos(id)
       );
+    },
+});
+
+export enum mateHighlight {
+  FROM,
+  TO,
+}
+
+export const mateSquares = selectorFamily<mateHighlight | null, number>({
+  key: "checkmate-squares-selector",
+  get:
+    (id) =>
+    ({ get }) => {
+      const boardState = (get(gameState) as GameState).boardState;
+      const mates = findMate(boardState);
+      if (toCorePos(id) === mates[0]?.at(0)) return mateHighlight.FROM;
+      if (toCorePos(id) === mates[0]?.at(1)) return mateHighlight.TO;
+      return null;
     },
 });
