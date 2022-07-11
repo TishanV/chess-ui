@@ -1,11 +1,11 @@
 import React from "react"
 import { useRecoilState } from "recoil";
 import { popup } from "../store";
-import Button from "react-bootstrap/Button";
+import { Button } from "../components/buttons";
 import Form from "react-bootstrap/Form";
 import { fenOfGameState, pgnOfGame } from "../store/pgn.selectors";
 import { useRef } from "react";
-import { pgnStyle } from "./style";
+import { pgnStyle, footerStyle } from "./style";
 
 function PGNPage() {
   const [currentPopup, setPopup] = useRecoilState(popup);
@@ -36,13 +36,17 @@ function PGNPage() {
           />
         </Form.Group>
       </Form>
-      <Button onClick={(_) => loadPGN(pgnRef.current?.value ?? "")}>
-        Load PGN
-      </Button>
-      <Button onClick={(_) => loadFEN(fenRef.current?.value ?? "")}>
-        Load FEN
-      </Button>
-      <Button onClick={(_) => setPopup("")}>Close</Button>
+      <div style={footerStyle}>
+        <Button.PRIMARY
+          onClick={(_) => loadPGN(pgnRef.current?.value ?? "")}
+          value="Load PGN"
+        />
+        <Button.PRIMARY
+          onClick={(_) => loadFEN(fenRef.current?.value ?? "")}
+          value="Load FEN"
+        />
+        <Button.SECONDARY onClick={(_) => setPopup("")} value="Close" />
+      </div>
     </div>
   ) : null;
 }

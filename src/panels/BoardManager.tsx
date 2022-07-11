@@ -1,4 +1,4 @@
-import React from "react";
+import React from "react"
 import { useRecoilState, useRecoilValue } from "recoil";
 import { Button } from "../components/buttons";
 import { Dropdown } from "../components/dropdown";
@@ -17,22 +17,6 @@ function BoardManager() {
   console.log("BoardManager rendered", boardListData);
   return (
     <div style={boardManagerStyle}>
-      <Button.RED
-        value="DL"
-        onClick={(_) =>
-          setBoardAction({
-            operation: gameListOperations.REMOVE,
-          })
-        }
-      />{" "}
-      <Button.PRIMARY
-        value="ADD"
-        onClick={(_) =>
-          setBoardAction({
-            operation: gameListOperations.ADD,
-          })
-        }
-      />{" "}
       <Dropdown
         selectedIndex={list.indexOf(selected)}
         list={boardNames}
@@ -43,6 +27,22 @@ function BoardManager() {
           })
         }
         style={boardNamesStyle}
+      />{" "}
+      <Button.PRIMARY
+        value={<b>{"+"}</b>}
+        onClick={(_) =>
+          setBoardAction({
+            operation: gameListOperations.ADD,
+          })
+        }
+      />{" "}
+      <Button.RED
+        value={<b>{"-"}</b>}
+        onClick={(_) =>
+          setBoardAction({
+            operation: gameListOperations.REMOVE,
+          })
+        }
       />
     </div>
   );

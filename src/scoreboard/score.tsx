@@ -1,9 +1,13 @@
 import React from "react"
-import { scoreColor } from "../globals";
+import { unselectedScoreColor, Theme } from "../globals";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { StateID, stateList, stateListOperations } from "../store/game.atoms";
 import { scoreSelector } from "../store/game.selector";
-import { enabledFeaturesAtom, Features } from "../store/config.atoms";
+import {
+  boardColorAtom,
+  enabledFeaturesAtom,
+  Features,
+} from "../store/config.atoms";
 import { scoreStyle } from "./style";
 
 interface ScoreProps {
@@ -20,13 +24,18 @@ function Score(props: ScoreProps) {
     enabledFeaturesAtom(Features.PIECE_SYMBOL)
   );
 
+  const selectedColor: string = Theme[useRecoilValue(boardColorAtom)][1];
+
   const selectID = (id: number) =>
     setStateList({ operation: stateListOperations.SELECT, payload: id });
   const numberScore = numerizeScore(score, props.id - 1);
   console.log(`Score ${props.id} render`);
   return (
     <div
-      style={{ ...scoreStyle, backgroundColor: scoreColor[+isSelected] }}
+      style={{
+        ...scoreStyle,
+        backgroundColor: isSelected ? selectedColor : unselectedScoreColor,
+      }}
       onClick={(_) => selectID(props.id)}
     >
       {pieceSymbolEnabled ? replacePieceChar(numberScore) : numberScore}

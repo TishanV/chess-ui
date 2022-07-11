@@ -12,12 +12,18 @@ type DropdownProps = {
 export function Dropdown(props: DropdownProps) {
   return (
     <BootstrapDropdown style={props.style}>
-      <BootstrapDropdown.Toggle variant="secondary">
+      <BootstrapDropdown.Toggle
+        variant="secondary"
+        style={{ width: props.style?.width }}
+      >
         <label>
           {props.list[props.selectedIndex ?? -1] ?? props.placeholder}
         </label>
       </BootstrapDropdown.Toggle>
-      <BootstrapDropdown.Menu variant="dark">
+      <BootstrapDropdown.Menu
+        variant="dark"
+        style={{ width: props.style?.width }}
+      >
         {props.list.map((item, i) => (
           <BootstrapDropdown.Item
             key={i}

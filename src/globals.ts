@@ -66,6 +66,7 @@ export const Theme: { [theme: string]: string[] } = {
   Brown: ["#E4943E", "#783F10"],
 };
 
-const scoreColor = ["#62626D", "#7976FF"]; // Unselected, Selected
+export const unselectedScoreColor = "#62626D";
+// const scoreColor = ["#62626D", "#7976FF"]; // Unselected, Selected
 
-export { defaultUIProps, scoreColor };
+export { defaultUIProps };

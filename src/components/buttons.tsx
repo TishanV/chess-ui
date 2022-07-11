@@ -2,7 +2,7 @@ import React from "react";
 import BootstrapButton from "react-bootstrap/Button";
 
 type ButtonProps = {
-  value: string;
+  value: string | JSX.Element;
   onClick: (e: MouseEvent | React.MouseEvent) => any;
 };
 

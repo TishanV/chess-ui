@@ -37,19 +37,25 @@ const movableStyle: React.CSSProperties = {
 const checkStyle: React.CSSProperties = {
   borderRadius: "50%",
   backgroundColor: "red",
-  boxShadow: "0px 0px 25px 20px red",
+  boxShadow: "0px 0px 10px 10px red",
 };
 
 const vulnerableStyle: React.CSSProperties = {
   borderRadius: "20%",
-  backgroundColor: "red",
-  opacity: 0.7,
+  border: "3px solid orange",
 };
 
 const captureStyle: React.CSSProperties = {
   borderRadius: "20%",
-  backgroundColor: "greenyellow",
-  opacity: 0.7,
+  border: "3px solid greenyellow",
+};
+
+const mateFromStyle: React.CSSProperties = {
+  backgroundColor: "yellow",
+};
+
+const mateToStyle: React.CSSProperties = {
+  backgroundColor: "lime",
 };
 
 const selectStyle: React.CSSProperties = {
@@ -71,12 +77,12 @@ export const highlightStyles = {
   CAPTURE: (s: number) => ({
     ...highlightBaseStyle,
     ...captureStyle,
-    ...highlightSizeStyle(s, 1.2),
+    ...highlightSizeStyle(s, 1.1),
   }),
   VULNERABLE: (s: number) => ({
     ...highlightBaseStyle,
     ...vulnerableStyle,
-    ...highlightSizeStyle(s, 1.2),
+    ...highlightSizeStyle(s, 1.1),
   }),
   CHECK: (s: number) => ({
     ...highlightBaseStyle,
@@ -87,5 +93,15 @@ export const highlightStyles = {
     ...highlightBaseStyle,
     ...movableStyle,
     ...highlightSizeStyle(s, 4),
+  }),
+  MATE_FROM: (s: number) => ({
+    ...highlightBaseStyle,
+    ...mateFromStyle,
+    ...highlightSizeStyle(s),
+  }),
+  MATE_TO: (s: number) => ({
+    ...highlightBaseStyle,
+    ...mateToStyle,
+    ...highlightSizeStyle(s),
   }),
 };
