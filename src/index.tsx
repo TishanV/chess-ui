@@ -17,7 +17,7 @@ function ChessUI(props: { width: number }) {
     <RecoilRoot initializeState={({ set }) => set(appSize, props.width ?? 500)}>
       <div style={chessUIBaseStyle}>
         <ChessBoard />
-        <div style={sidePanelStyle}>
+        <div style={{ ...sidePanelStyle, height: props.width }}>
           <ScoreBoard />
           <BoardManager />
           <Navigator />

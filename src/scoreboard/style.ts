@@ -11,7 +11,6 @@ export const scoreBoardStyle: React.CSSProperties = {
 export const scoreStyle: React.CSSProperties = {
   float: "left",
   margin: 5,
-  backgroundColor: "#62626D",
   padding: 5,
   borderRadius: 5,
   cursor: "pointer",

@@ -56,7 +56,6 @@ export function GeneralPage() {
         checked={!pieceSound}
         onChange={(_) => setPieceSoundState((v) => !v)}
       />
-      <Check id={"4"} type="checkbox" label="Disable animations" />
     </div>
   );
 }

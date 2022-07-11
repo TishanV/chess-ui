@@ -1,4 +1,4 @@
-import React from "react";
+import React from "react"
 import { Square } from "./square";
 import { appSize, boardOrientation } from "../store";
 import { useRecoilValue, useSetRecoilState } from "recoil";
