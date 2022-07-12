@@ -1,4 +1,4 @@
-# Chess UI 1.0.1
+# Chess UI 1.0.2
 A react ui library for integrating chess into web apps and analyzing chess games.
 
 
